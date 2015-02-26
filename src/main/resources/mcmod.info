@@ -1,0 +1,16 @@
+[
+{
+  "modid": "mcdocs",
+  "name": "MCDocs",
+  "description": "Documentation within Minecraft",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["theunknownxy"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
