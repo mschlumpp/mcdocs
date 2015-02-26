@@ -1,4 +1,4 @@
-package de.theunknownxy.loader
+package de.theunknownxy.jgui.loader
 
 import de.theunknownxy.jgui.Root
 
