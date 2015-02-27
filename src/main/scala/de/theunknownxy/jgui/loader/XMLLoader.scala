@@ -1,6 +1,6 @@
 package de.theunknownxy.jgui.loader
 
-import de.theunknownxy.jgui.Root
+import de.theunknownxy.jgui.base.Root
 
 import scala.xml.Elem
 

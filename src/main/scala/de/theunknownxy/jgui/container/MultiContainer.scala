@@ -1,7 +1,6 @@
 package de.theunknownxy.jgui.container
 
-import de.theunknownxy.jgui.Widget
-import de.theunknownxy.jgui.base.Point
+import de.theunknownxy.jgui.base.{Widget, Point}
 import de.theunknownxy.jgui.event.MouseButton.MouseButton
 import de.theunknownxy.jgui.layout.Constraint
 

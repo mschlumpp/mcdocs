@@ -1,6 +1,5 @@
-package de.theunknownxy.jgui
+package de.theunknownxy.jgui.base
 
-import de.theunknownxy.jgui.base.{Point, Rectangle}
 import de.theunknownxy.jgui.container.Container
 import de.theunknownxy.jgui.event.MouseButton.MouseButton
 

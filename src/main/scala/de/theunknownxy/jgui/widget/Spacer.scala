@@ -1,4 +1,6 @@
-package de.theunknownxy.jgui
+package de.theunknownxy.jgui.widget
+
+import de.theunknownxy.jgui.base.Widget
 
 /** A widget which does nothing
   *

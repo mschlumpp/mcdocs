@@ -1,4 +1,4 @@
-package de.theunknownxy.jgui
+package de.theunknownxy.jgui.base
 
 import de.theunknownxy.jgui.container.SingleContainer
 
