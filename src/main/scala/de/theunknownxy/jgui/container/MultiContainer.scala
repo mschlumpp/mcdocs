@@ -21,4 +21,8 @@ abstract class MultiContainer extends Container {
   override def mouseClick(pos: Point, button: MouseButton): Option[Widget] = {
     children find(_._1.area contains pos) flatMap(_._1.mouseClick(pos, button))
   }
+
+  override def draw(): Unit = {
+    children map(_._1 draw())
+  }
 }
