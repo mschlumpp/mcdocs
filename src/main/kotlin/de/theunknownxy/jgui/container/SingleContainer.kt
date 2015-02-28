@@ -9,13 +9,11 @@ public abstract class SingleContainer : Container() {
 
     override fun mouseClick(pos: Point, button: MouseButton): Widget? {
         val c = child
-        if(c != null && c.area.contains(pos)) {
+        if (c != null && c.area.contains(pos)) {
             return c.mouseClick(pos, button)
         }
         return null
     }
 
-    override fun draw() {
-        child?.draw()
-    }
+    override fun draw() = child?.draw()
 }
