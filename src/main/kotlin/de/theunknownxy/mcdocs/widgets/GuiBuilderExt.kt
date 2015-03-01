@@ -18,23 +18,3 @@ class BImage : BWidget(Image()) {
     }
 }
 fun BContainer.image(init: BImage.() -> Unit) = initWidget(BImage(), init)
-
-fun example() {
-    root {
-        vbox {
-            spacer {
-                vpolicy { expanding(2f) }
-            }
-            spacer {
-                vpolicy { expanding(3f) }
-            }
-            vbox {
-                vpolicy { fixed(200f) }
-                spacer {}
-            }
-            image {
-                path("mcdocs:mainbackground")
-            }
-        }
-    }
-}
