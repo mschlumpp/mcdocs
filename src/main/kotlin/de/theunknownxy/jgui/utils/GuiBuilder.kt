@@ -11,6 +11,7 @@ import de.theunknownxy.jgui.container.VerticalBox
 import de.theunknownxy.jgui.container.MultiContainer
 import de.theunknownxy.jgui.container.SingleContainer
 import de.theunknownxy.jgui.container.MultiContainer.Entry
+import de.theunknownxy.jgui.container.HorizontalBox
 
 class BPolicy {
     var policy: Policy = ExpandingPolicy(1f)
@@ -54,6 +55,7 @@ abstract class BContainer(widget: Widget) : BWidget(widget) {
 
     fun spacer(init: BSpacer.() -> Unit) = initWidget(BSpacer(), init)
     fun vbox(init: BVBox.() -> Unit) = initWidget(BVBox(), init)
+    fun hbox(init: BHBox.() -> Unit) = initWidget(BHBox(), init)
 }
 
 abstract class BMultiContainer(widget: Widget) : BContainer(widget) {
@@ -71,6 +73,7 @@ abstract class BSingleContainer(widget: Widget) : BContainer(widget) {
 }
 
 class BVBox : BMultiContainer(VerticalBox())
+class BHBox : BMultiContainer(HorizontalBox())
 class BRoot : BSingleContainer(Root())
 class BSpacer : BWidget(Spacer())
 
