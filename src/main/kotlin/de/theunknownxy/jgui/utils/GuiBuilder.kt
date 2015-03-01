@@ -37,6 +37,10 @@ abstract class BWidget(var widget: Widget) {
         policy.init()
         constraint.horizontal = policy.policy
     }
+
+    fun fixed(width: Float, height: Float) {
+        constraint = Constraint(FixedPolicy(width), FixedPolicy(height))
+    }
 }
 
 abstract class BContainer(widget: Widget) : BWidget(widget) {
@@ -53,13 +57,13 @@ abstract class BContainer(widget: Widget) : BWidget(widget) {
 
 abstract class BMultiContainer(widget: Widget) : BContainer(widget) {
     override fun put(widget: Widget, constraint: Constraint) {
-        (widget as MultiContainer).children.put(widget, constraint)
+        (this.widget as MultiContainer).children.put(widget, constraint)
     }
 }
 
 abstract class BSingleContainer(widget: Widget) : BContainer(widget) {
     override fun put(widget: Widget, constraint: Constraint) {
-        val container = widget as SingleContainer
+        val container = this.widget as SingleContainer
         container.child = widget
         container.constraint = constraint
     }
@@ -72,5 +76,6 @@ class BSpacer : BWidget(Spacer())
 fun root(init: BRoot.() -> Unit): Root {
     val root = BRoot()
     root.init()
+    root.widget.areaChanged() // Trigger an update
     return root.widget as Root
 }
