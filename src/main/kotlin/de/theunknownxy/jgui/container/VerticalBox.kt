@@ -22,14 +22,18 @@ public class VerticalBox : MultiContainer() {
             val policy = constraint.vertical
             if (policy is ExpandingPolicy) {
                 widget.area.height = policy.importance / expanding_sum * available_space
+            } else if(policy is FixedPolicy) {
+                widget.area.height = policy.value;
             }
         }
 
         // Step 3: Adjust widget positions
         var lasty = area.y
         for (widget in children.keySet()) {
-            // Set common properties
+            // Adjust left side
             widget.area.x = this.area.x
+
+            // Set width depending on policy
             val horizontal = children[widget]?.horizontal
             if(horizontal is FixedPolicy) {
                 widget.area.width = horizontal.value
@@ -37,7 +41,7 @@ public class VerticalBox : MultiContainer() {
                 widget.area.width = this.area.width
             }
 
-            // Set calculated properties
+            // Stack widget on previous
             widget.area.y = lasty
             lasty += widget.area.height
 
