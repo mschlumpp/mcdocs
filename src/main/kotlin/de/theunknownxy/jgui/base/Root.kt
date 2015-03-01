@@ -8,5 +8,6 @@ public class Root : SingleContainer() {
 
     override fun recalculateChildren() {
         child?.area = area
+        child?.areaChanged()
     }
 }

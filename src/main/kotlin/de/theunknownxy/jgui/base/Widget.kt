@@ -11,4 +11,6 @@ public abstract class Widget {
     public open fun mouseClick(pos: Point, button: MouseButton) : Widget? {
         return null
     }
+
+    open fun areaChanged() {}
 }

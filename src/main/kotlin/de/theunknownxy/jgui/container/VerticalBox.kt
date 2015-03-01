@@ -30,11 +30,19 @@ public class VerticalBox : MultiContainer() {
         for (widget in children.keySet()) {
             // Set common properties
             widget.area.x = this.area.x
-            widget.area.width = this.area.width
+            val horizontal = children[widget]?.horizontal
+            if(horizontal is FixedPolicy) {
+                widget.area.width = horizontal.value
+            } else if(horizontal is ExpandingPolicy) {
+                widget.area.width = this.area.width
+            }
 
             // Set calculated properties
             widget.area.y = lasty
             lasty += widget.area.height
+
+            // Call area changed method
+            widget.areaChanged()
         }
     }
 }
