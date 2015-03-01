@@ -29,12 +29,12 @@ public class VerticalBox : MultiContainer() {
 
         // Step 3: Adjust widget positions
         var lasty = area.y
-        for (widget in children.keySet()) {
+        for ((widget, constraint) in children) {
             // Adjust left side
             widget.area.x = this.area.x
 
             // Set width depending on policy
-            val horizontal = children[widget]?.horizontal
+            val horizontal = constraint.horizontal
             if(horizontal is FixedPolicy) {
                 widget.area.width = horizontal.value
             } else if(horizontal is ExpandingPolicy) {

@@ -10,6 +10,7 @@ import de.theunknownxy.jgui.widget.Spacer
 import de.theunknownxy.jgui.container.VerticalBox
 import de.theunknownxy.jgui.container.MultiContainer
 import de.theunknownxy.jgui.container.SingleContainer
+import de.theunknownxy.jgui.container.MultiContainer.Entry
 
 class BPolicy {
     var policy: Policy = ExpandingPolicy(1f)
@@ -44,11 +45,11 @@ abstract class BWidget(var widget: Widget) {
 }
 
 abstract class BContainer(widget: Widget) : BWidget(widget) {
-    abstract fun put(widget: Widget, constraint: Constraint)
+    abstract fun add(widget: Widget, constraint: Constraint)
 
     fun initWidget<T : BWidget>(widget: T, init: T.() -> Unit) {
         widget.init()
-        put(widget.widget, widget.constraint)
+        add(widget.widget, widget.constraint)
     }
 
     fun spacer(init: BSpacer.() -> Unit) = initWidget(BSpacer(), init)
@@ -56,13 +57,13 @@ abstract class BContainer(widget: Widget) : BWidget(widget) {
 }
 
 abstract class BMultiContainer(widget: Widget) : BContainer(widget) {
-    override fun put(widget: Widget, constraint: Constraint) {
-        (this.widget as MultiContainer).children.put(widget, constraint)
+    override fun add(widget: Widget, constraint: Constraint) {
+        (this.widget as MultiContainer).children.add(Entry(widget, constraint))
     }
 }
 
 abstract class BSingleContainer(widget: Widget) : BContainer(widget) {
-    override fun put(widget: Widget, constraint: Constraint) {
+    override fun add(widget: Widget, constraint: Constraint) {
         val container = this.widget as SingleContainer
         container.child = widget
         container.constraint = constraint

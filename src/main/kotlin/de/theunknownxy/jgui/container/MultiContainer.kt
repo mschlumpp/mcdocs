@@ -5,10 +5,12 @@ import de.theunknownxy.jgui.event.MouseButton
 import de.theunknownxy.jgui.base.Widget
 import de.theunknownxy.jgui.layout.Constraint
 import java.util.HashMap
+import java.util.ArrayList
 
 public abstract class MultiContainer : Container() {
-    public var children: MutableMap<Widget, Constraint> = HashMap()
+    data class Entry(val widget: Widget, val constraint: Constraint)
+    public var children: MutableList<Entry> = ArrayList()
 
-    override fun draw() = children.keySet().forEach { w -> w.draw() }
-    override fun mouseClick(pos: Point, button: MouseButton): Widget? = children.keySet().firstOrNull { w -> w.area.contains(pos) }?.mouseClick(pos, button)
+    override fun draw() = children.forEach { w -> w.widget.draw() }
+    override fun mouseClick(pos: Point, button: MouseButton): Widget? = children.firstOrNull { w -> w.widget.area.contains(pos) }?.widget?.mouseClick(pos, button)
 }
