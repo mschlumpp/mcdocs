@@ -3,13 +3,11 @@ package de.theunknownxy.jgui.container
 import de.theunknownxy.jgui.base.Point
 import de.theunknownxy.jgui.event.MouseButton
 import de.theunknownxy.jgui.base.Widget
-import de.theunknownxy.jgui.layout.Constraint
-import java.util.HashMap
 import java.util.ArrayList
 
 public abstract class MultiContainer : Container() {
     // TODO: Override width setter so that width == children.max(fixed? -> width)
-    data class Entry(val widget: Widget, val constraint: Constraint)
+    data class Entry(val widget: Widget)
     public var children: MutableList<Entry> = ArrayList()
 
     override fun draw() = children.forEach { w -> w.widget.draw() }

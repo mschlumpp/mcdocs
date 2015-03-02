@@ -1,7 +1,8 @@
 package de.theunknownxy.jgui.base
 
-import de.theunknownxy.jgui.container.Container
 import de.theunknownxy.jgui.event.MouseButton
+import de.theunknownxy.jgui.layout.Constraint
+import de.theunknownxy.jgui.layout.ExpandingPolicy
 
 public abstract class Widget {
     public var suspended: Boolean = false
@@ -38,6 +39,8 @@ public abstract class Widget {
             $height = value.height
             areaChanged()
         }
+    public var constraint: Constraint = Constraint(ExpandingPolicy(1f), ExpandingPolicy(1f))
+
 
     protected fun areaChanged() {
         if(!suspended) onAreaChanged()
