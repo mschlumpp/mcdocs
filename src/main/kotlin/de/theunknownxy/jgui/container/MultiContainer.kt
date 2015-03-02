@@ -7,9 +7,8 @@ import java.util.ArrayList
 
 public abstract class MultiContainer : Container() {
     // TODO: Override width setter so that width == children.max(fixed? -> width)
-    data class Entry(val widget: Widget)
-    public var children: MutableList<Entry> = ArrayList()
+    public var children: MutableList<Widget> = ArrayList()
 
-    override fun draw() = children.forEach { w -> w.widget.draw() }
-    override fun onMouseClick(pos: Point, button: MouseButton): Widget? = children.firstOrNull { w -> w.widget.rect.contains(pos) }?.widget?.onMouseClick(pos, button)
+    override fun draw() = children.forEach { w -> w.draw() }
+    override fun onMouseClick(pos: Point, button: MouseButton): Widget? = children.firstOrNull { w -> w.rect.contains(pos) }?.onMouseClick(pos, button)
 }

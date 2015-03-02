@@ -8,7 +8,7 @@ public class VerticalBox : MultiContainer() {
         // Step 1: Remove space used by Fixed and collect the total importance of Expanding elements
         var available_space = this.height
         var expanding_sum = 0f
-        for ((widget) in children) {
+        for (widget in children) {
             // Suspend all widgets
             widget.suspended = true
 
@@ -22,7 +22,7 @@ public class VerticalBox : MultiContainer() {
         }
 
         // Step 2: Partition remaining space to the expanding widgets
-        for ((widget) in children) {
+        for (widget in children) {
             val policy = widget.constraint.vertical
             if (policy is ExpandingPolicy) {
                 widget.height = policy.importance / expanding_sum * available_space
@@ -33,7 +33,7 @@ public class VerticalBox : MultiContainer() {
 
         // Step 3: Adjust widget positions
         var lasty = y
-        for ((widget) in children) {
+        for (widget in children) {
             // Adjust left side
             widget.x = this.x
 

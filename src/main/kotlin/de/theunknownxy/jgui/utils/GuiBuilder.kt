@@ -10,7 +10,6 @@ import de.theunknownxy.jgui.widget.Spacer
 import de.theunknownxy.jgui.container.VerticalBox
 import de.theunknownxy.jgui.container.MultiContainer
 import de.theunknownxy.jgui.container.SingleContainer
-import de.theunknownxy.jgui.container.MultiContainer.Entry
 import de.theunknownxy.jgui.container.HorizontalBox
 
 class BPolicy {
@@ -58,7 +57,7 @@ abstract class BContainer(widget: Widget) : BWidget(widget) {
 
 abstract class BMultiContainer(widget: Widget) : BContainer(widget) {
     override fun add(widget: Widget) {
-        (this.widget as MultiContainer).children.add(Entry(widget))
+        (this.widget as MultiContainer).children.add(widget)
     }
 }
 
