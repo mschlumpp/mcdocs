@@ -4,25 +4,30 @@ import de.theunknownxy.jgui.container.Container
 import de.theunknownxy.jgui.event.MouseButton
 
 public abstract class Widget {
+    public var suspended: Boolean = false
+        set(value) {
+            $suspended = value
+            if(!value) areaChanged()
+        }
     public var x: Float = 0f
         set(value) {
             $x = value
-            onAreaChanged()
+            areaChanged()
         }
     public var y: Float = 0f
         set(value) {
             $y = value
-            onAreaChanged()
+            areaChanged()
         }
     public var width: Float = 0f
         set(value) {
             $width = value
-            onAreaChanged()
+            areaChanged()
         }
     public var height: Float = 0f
         set(value) {
             $height = value
-            onAreaChanged()
+            areaChanged()
         }
     public var rect: Rectangle
         get() = Rectangle(x, y, width, height)
@@ -31,10 +36,14 @@ public abstract class Widget {
             $y = value.y
             $width = value.width
             $height = value.height
-            onAreaChanged()
+            areaChanged()
         }
+
+    protected fun areaChanged() {
+        if(!suspended) onAreaChanged()
+    }
 
     public abstract fun draw()
     public open fun onMouseClick(pos: Point, button: MouseButton): Widget? = null
-    public open fun onAreaChanged() {}
+    protected open fun onAreaChanged() {}
 }

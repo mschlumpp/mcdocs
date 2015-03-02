@@ -15,6 +15,5 @@ public class Root : SingleContainer() {
 
     override fun recalculateChildren() {
         child?.rect = rect
-        child?.onAreaChanged()
     }
 }

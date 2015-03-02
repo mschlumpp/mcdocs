@@ -9,6 +9,10 @@ public class VerticalBox : MultiContainer() {
         var available_space = this.height
         var expanding_sum = 0f
         for ((widget, constraint) in children) {
+            // Suspend all widgets
+            widget.suspended = true
+
+            // Now calculate expanding_sum/available_space
             val policy = constraint.vertical
 
             when (policy) {
@@ -45,8 +49,8 @@ public class VerticalBox : MultiContainer() {
             widget.y = lasty
             lasty += widget.height
 
-            // Call area changed method
-            widget.onAreaChanged()
+            // Unsuspend the widget
+            widget.suspended = false
         }
     }
 }

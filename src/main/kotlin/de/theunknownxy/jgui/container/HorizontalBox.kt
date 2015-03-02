@@ -10,6 +10,10 @@ public class HorizontalBox : MultiContainer() {
         var available_space = this.width
         var expanding_sum = 0f
         for ((widget, constraint) in children) {
+            // Suspend all widgets
+            widget.suspended = true
+
+            // Now calculate expanding_sum/available_space
             val policy = constraint.horizontal
 
             when (policy) {
@@ -46,8 +50,8 @@ public class HorizontalBox : MultiContainer() {
             widget.x = lastx
             lastx += widget.width
 
-            // Call area changed method
-            widget.onAreaChanged()
+            // Unsuspend the widget
+            widget.suspended = false
         }
     }
 }
