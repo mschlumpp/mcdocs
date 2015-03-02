@@ -7,22 +7,22 @@ public abstract class Widget {
     public var x: Float = 0f
         set(value) {
             $x = value
-            areaChanged()
+            onAreaChanged()
         }
     public var y: Float = 0f
         set(value) {
             $y = value
-            areaChanged()
+            onAreaChanged()
         }
     public var width: Float = 0f
         set(value) {
             $width = value
-            areaChanged()
+            onAreaChanged()
         }
     public var height: Float = 0f
         set(value) {
             $height = value
-            areaChanged()
+            onAreaChanged()
         }
     public var rect: Rectangle
         get() = Rectangle(x, y, width, height)
@@ -31,10 +31,10 @@ public abstract class Widget {
             $y = value.y
             $width = value.width
             $height = value.height
-            areaChanged()
+            onAreaChanged()
         }
 
     public abstract fun draw()
-    public open fun mouseClick(pos: Point, button: MouseButton): Widget? = null
-    public open fun areaChanged() {}
+    public open fun onMouseClick(pos: Point, button: MouseButton): Widget? = null
+    public open fun onAreaChanged() {}
 }

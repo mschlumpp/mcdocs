@@ -46,7 +46,7 @@ public class VerticalBox : MultiContainer() {
             lasty += widget.height
 
             // Call area changed method
-            widget.areaChanged()
+            widget.onAreaChanged()
         }
     }
 }

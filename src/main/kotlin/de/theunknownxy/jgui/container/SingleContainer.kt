@@ -9,10 +9,10 @@ public abstract class SingleContainer : Container() {
     public var child: Widget? = null
     public var constraint: Constraint? = null
 
-    override fun mouseClick(pos: Point, button: MouseButton): Widget? {
+    override fun onMouseClick(pos: Point, button: MouseButton): Widget? {
         val c = child
         if (c != null && c.rect.contains(pos)) {
-            return c.mouseClick(pos, button)
+            return c.onMouseClick(pos, button)
         }
         return null
     }

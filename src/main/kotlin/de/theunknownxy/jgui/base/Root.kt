@@ -8,13 +8,13 @@ public class Root : SingleContainer() {
     public var named_widgets: HashMap<String, Widget> = HashMap()
     public var selected_widget: Widget? = null
 
-    override fun mouseClick(pos: Point, button: MouseButton): Widget? {
-        selected_widget = super.mouseClick(pos, button)
+    override fun onMouseClick(pos: Point, button: MouseButton): Widget? {
+        selected_widget = super.onMouseClick(pos, button)
         return selected_widget
     }
 
     override fun recalculateChildren() {
         child?.rect = rect
-        child?.areaChanged()
+        child?.onAreaChanged()
     }
 }

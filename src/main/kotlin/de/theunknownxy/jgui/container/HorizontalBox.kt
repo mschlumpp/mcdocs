@@ -47,7 +47,7 @@ public class HorizontalBox : MultiContainer() {
             lastx += widget.width
 
             // Call area changed method
-            widget.areaChanged()
+            widget.onAreaChanged()
         }
     }
 }

@@ -80,6 +80,6 @@ class BSpacer : BWidget(Spacer())
 fun root(init: BRoot.() -> Unit): Root {
     val root = BRoot()
     root.init()
-    root.widget.areaChanged() // Trigger an update
+    root.widget.onAreaChanged() // Trigger an update
     return root.widget as Root
 }
