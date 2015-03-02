@@ -13,11 +13,11 @@ class Image : Widget() {
     override fun draw() {
         if(tex != null && gui != null) {
             GL11.glPushMatrix()
-            GL11.glTranslatef(area.x, area.y, 0f)
+            GL11.glTranslatef(x, y, 0f)
 
             val mc = Minecraft.getMinecraft()
             mc.getTextureManager().bindTexture(tex)
-            gui!!.drawTexturedModalRect(0, 0, 0, 0, area.width.toInt(), area.height.toInt())
+            gui!!.drawTexturedModalRect(0, 0, 0, 0, width.toInt(), height.toInt())
 
             GL11.glPopMatrix()
         }

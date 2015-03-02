@@ -6,7 +6,7 @@ import de.theunknownxy.jgui.layout.FixedPolicy
 public class VerticalBox : MultiContainer() {
     override fun recalculateChildren() {
         // Step 1: Remove space used by Fixed and collect the total importance of Expanding elements
-        var available_space = this.area.height
+        var available_space = this.height
         var expanding_sum = 0f
         for ((widget, constraint) in children) {
             val policy = constraint.vertical
@@ -21,29 +21,29 @@ public class VerticalBox : MultiContainer() {
         for ((widget, constraint) in children) {
             val policy = constraint.vertical
             if (policy is ExpandingPolicy) {
-                widget.area.height = policy.importance / expanding_sum * available_space
+                widget.height = policy.importance / expanding_sum * available_space
             } else if(policy is FixedPolicy) {
-                widget.area.height = policy.value;
+                widget.height = policy.value;
             }
         }
 
         // Step 3: Adjust widget positions
-        var lasty = area.y
+        var lasty = y
         for ((widget, constraint) in children) {
             // Adjust left side
-            widget.area.x = this.area.x
+            widget.x = this.x
 
             // Set width depending on policy
             val horizontal = constraint.horizontal
             if(horizontal is FixedPolicy) {
-                widget.area.width = horizontal.value
+                widget.width = horizontal.value
             } else if(horizontal is ExpandingPolicy) {
-                widget.area.width = this.area.width
+                widget.width = this.width
             }
 
             // Stack widget on previous
-            widget.area.y = lasty
-            lasty += widget.area.height
+            widget.y = lasty
+            lasty += widget.height
 
             // Call area changed method
             widget.areaChanged()
