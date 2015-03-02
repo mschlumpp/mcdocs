@@ -5,24 +5,36 @@ import de.theunknownxy.jgui.event.MouseButton
 
 public abstract class Widget {
     public var x: Float = 0f
+        set(value) {
+            $x = value
+            areaChanged()
+        }
     public var y: Float = 0f
+        set(value) {
+            $y = value
+            areaChanged()
+        }
     public var width: Float = 0f
+        set(value) {
+            $width = value
+            areaChanged()
+        }
     public var height: Float = 0f
+        set(value) {
+            $height = value
+            areaChanged()
+        }
     public var rect: Rectangle
         get() = Rectangle(x, y, width, height)
         set(value) {
-            x = value.x
-            y = value.y
-            width = value.width
-            height = value.height
+            $x = value.x
+            $y = value.y
+            $width = value.width
+            $height = value.height
+            areaChanged()
         }
 
-    public var parent: Container? = null
-
     public abstract fun draw()
-    public open fun mouseClick(pos: Point, button: MouseButton): Widget? {
-        return null
-    }
-
-    open fun areaChanged() {}
+    public open fun mouseClick(pos: Point, button: MouseButton): Widget? = null
+    public open fun areaChanged() {}
 }
