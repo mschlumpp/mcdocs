@@ -14,36 +14,42 @@ public class HorizontalBox : MultiContainer() {
             widget.suspended = true
 
             // Now calculate expanding_sum/available_space
-            val policy = widget.constraint.horizontal
-
-            when (policy) {
-                is ExpandingPolicy -> expanding_sum += policy.importance
-                is FixedPolicy -> available_space -= policy.value
+            for(constraint in widget.getConstraints()) {
+                var policy = constraint.horizontal
+                when(policy) {
+                    is ExpandingPolicy -> expanding_sum += (policy as ExpandingPolicy).importance
+                    is FixedPolicy -> available_space -= (policy as FixedPolicy).value
+                }
             }
         }
 
         // Step 2: Partition remaining space to the expanding widgets and set the width of fixed widgets
         for (widget in children) {
-            val policy = widget.constraint.horizontal
-            if (policy is ExpandingPolicy) {
-                widget.width = policy.importance / expanding_sum * available_space
-            } else if(policy is FixedPolicy) {
-                widget.width = policy.value;
+            widget.width = 0f
+            for(constraint in widget.getConstraints()) {
+                var policy = constraint.horizontal
+                if(policy is ExpandingPolicy) {
+                    widget.width += (policy as ExpandingPolicy).importance / expanding_sum * available_space
+                } else if(policy is FixedPolicy) {
+                    widget.width += (policy as FixedPolicy).value
+                }
             }
         }
 
         // Step 3: Adjust widget positions
-        var lastx = x
+        var lastx = this.x
         for (widget in children) {
             // Adjust top side
             widget.y = this.y
 
             // Set height depending on policy
-            val vertical = widget.constraint.vertical
-            if(vertical is FixedPolicy) {
-                widget.height = vertical.value
-            } else if(vertical is ExpandingPolicy) {
-                widget.height= this.width
+            for(constraint in widget.getConstraints()) {
+                val policy = constraint.vertical
+                if(policy is FixedPolicy) {
+                    widget.height = Math.max(widget.height, (policy : FixedPolicy).value)
+                } else if(policy is ExpandingPolicy) {
+                    widget.height = this.width
+                }
             }
 
             // Stack widget on previous
