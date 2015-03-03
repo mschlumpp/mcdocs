@@ -3,8 +3,6 @@ package de.theunknownxy.jgui.base
 import de.theunknownxy.jgui.event.MouseButton
 import de.theunknownxy.jgui.layout.Constraint
 import de.theunknownxy.jgui.layout.ExpandingPolicy
-import java.util.ArrayList
-import de.theunknownxy.jgui.layout.Policy
 
 public abstract class Widget {
     public var suspended: Boolean = false
@@ -41,35 +39,8 @@ public abstract class Widget {
             $height = value.height
             areaChanged()
         }
-    private var _constraint: Constraint? = Constraint(ExpandingPolicy(1f), ExpandingPolicy(1f))
+    public var constraint: Constraint = Constraint(ExpandingPolicy(1f), ExpandingPolicy(1f))
 
-    public fun setConstraint(constraint: Constraint?) {
-        _constraint = constraint
-    }
-
-    public fun setVerticalPolicy(policy: Policy) {
-        if(_constraint != null) {
-            _constraint!!.vertical = policy
-        } else {
-            _constraint = Constraint(ExpandingPolicy(1f), policy)
-        }
-    }
-
-    public fun setHorizontalPolicy(policy: Policy) {
-        if(_constraint != null) {
-            _constraint!!.horizontal = policy
-        } else {
-            _constraint = Constraint(policy, ExpandingPolicy(1f))
-        }
-    }
-
-    public open fun getConstraints(): MutableList<Constraint> {
-        val ar = ArrayList<Constraint>()
-        if(_constraint != null) {
-            ar.add(_constraint)
-        }
-        return ar
-    }
 
     protected fun areaChanged() {
         if(!suspended) onAreaChanged()

@@ -28,17 +28,17 @@ abstract class BWidget(var widget: Widget) {
     fun vpolicy(init: BPolicy.() -> Unit) {
         val policy = BPolicy()
         policy.init()
-        widget.setVerticalPolicy(policy.policy)
+        widget.constraint.vertical = policy.policy
     }
 
     fun hpolicy(init: BPolicy.() -> Unit) {
         val policy = BPolicy()
         policy.init()
-        widget.setHorizontalPolicy(policy.policy)
+        widget.constraint.horizontal = policy.policy
     }
 
     fun fixed(width: Float, height: Float) {
-        widget.setConstraint(Constraint(FixedPolicy(width), FixedPolicy(height)))
+        widget.constraint = Constraint(FixedPolicy(width), FixedPolicy(height))
     }
 }
 
