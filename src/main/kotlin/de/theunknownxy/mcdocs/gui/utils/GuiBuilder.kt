@@ -39,6 +39,10 @@ abstract class BWidget(var widget: Widget) {
     fun fixed(width: Float, height: Float) {
         widget.constraint = Constraint(FixedPolicy(width), FixedPolicy(height))
     }
+
+    fun id(name: String) {
+        widget.root!!.named_widgets[name] = this.widget
+    }
 }
 
 abstract class BContainer(widget: Widget) : BWidget(widget) {
