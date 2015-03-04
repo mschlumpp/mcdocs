@@ -6,7 +6,6 @@ import de.theunknownxy.mcdocs.gui.event.MouseButton
 import de.theunknownxy.mcdocs.gui.base.Root
 
 public class TextField(root: Root?) : Widget(root) {
-    var gui: net.minecraft.client.gui.GuiScreen? = null
     private var textfield: net.minecraft.client.gui.GuiTextField? = null // Initialize it lazy
     public var content: String
         set(str: String) {

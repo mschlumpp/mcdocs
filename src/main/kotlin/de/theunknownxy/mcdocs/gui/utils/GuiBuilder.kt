@@ -2,16 +2,15 @@ package de.theunknownxy.mcdocs.gui.utils
 
 import de.theunknownxy.mcdocs.gui.base.Root
 import de.theunknownxy.mcdocs.gui.base.Widget
-import de.theunknownxy.mcdocs.gui.layout.Constraint
-import de.theunknownxy.mcdocs.gui.layout.ExpandingPolicy
-import de.theunknownxy.mcdocs.gui.layout.Policy
-import de.theunknownxy.mcdocs.gui.layout.FixedPolicy
-import de.theunknownxy.mcdocs.gui.widget.Spacer
-import de.theunknownxy.mcdocs.gui.container.VerticalBox
-import de.theunknownxy.mcdocs.gui.container.MultiContainer
-import de.theunknownxy.mcdocs.gui.container.SingleContainer
-import de.theunknownxy.mcdocs.gui.container.HorizontalBox
+import de.theunknownxy.mcdocs.gui.layout.*
+import de.theunknownxy.mcdocs.gui.container.*
+import de.theunknownxy.mcdocs.gui.widget.*
+import net.minecraft.client.gui.GuiScreen
+import net.minecraft.util.ResourceLocation
 
+/****************
+ * Base classes *
+ ****************/
 class BPolicy {
     var policy: Policy = ExpandingPolicy(1f)
 
@@ -50,9 +49,6 @@ abstract class BContainer(widget: Widget) : BWidget(widget) {
         add(widget.widget)
     }
 
-    fun spacer(init: BSpacer.() -> Unit) = initWidget(BSpacer(this.widget.root), init)
-    fun vbox(init: BVBox.() -> Unit) = initWidget(BVBox(this.widget.root), init)
-    fun hbox(init: BHBox.() -> Unit) = initWidget(BHBox(this.widget.root), init)
 }
 
 abstract class BMultiContainer(widget: Widget) : BContainer(widget) {
@@ -68,17 +64,41 @@ abstract class BSingleContainer(widget: Widget) : BContainer(widget) {
     }
 }
 
+/********************************
+ * Classes for concrete Widgets *
+ ********************************/
 class BVBox(root: Root?) : BMultiContainer(VerticalBox(root))
+
 class BHBox(root: Root?) : BMultiContainer(HorizontalBox(root))
 class BSpacer(root: Root?) : BWidget(Spacer(root))
-class BRoot : BSingleContainer(Root()) {
+class BImage(root: Root?) : BWidget(Image(root)) {
+    fun path(res_path: String) {
+        val img = widget as Image
+        img.tex = ResourceLocation(res_path)
+    }
+}
+
+class BTextField(root: Root?) : BWidget(TextField(root)) {
+    fun content(str: String) {
+        val field = widget as TextField
+        field.content = str
+    }
+}
+
+class BRoot(gui: GuiScreen) : BSingleContainer(Root(gui)) {
     public fun setRoot() {
         this.widget.root = this.widget as Root
     }
 }
 
-fun root(init: BRoot.() -> Unit): Root {
-    val root = BRoot()
+fun BContainer.image(init: BImage.() -> Unit) = initWidget(BImage(this.widget.root), init)
+fun BContainer.textfield(init: BTextField.() -> Unit) = initWidget(BTextField(this.widget.root), init)
+fun BContainer.spacer(init: BSpacer.() -> Unit) = initWidget(BSpacer(this.widget.root), init)
+fun BContainer.vbox(init: BVBox.() -> Unit) = initWidget(BVBox(this.widget.root), init)
+fun BContainer.hbox(init: BHBox.() -> Unit) = initWidget(BHBox(this.widget.root), init)
+
+fun root(gui: GuiScreen, init: BRoot.() -> Unit): Root {
+    val root = BRoot(gui)
     root.setRoot()
     root.init()
     return root.widget as Root

@@ -3,8 +3,9 @@ package de.theunknownxy.mcdocs.gui.base
 import de.theunknownxy.mcdocs.gui.container.SingleContainer
 import java.util.HashMap
 import de.theunknownxy.mcdocs.gui.event.MouseButton
+import net.minecraft.client.gui.GuiScreen
 
-public class Root : SingleContainer(null) {
+public class Root(public val gui: GuiScreen) : SingleContainer(null) {
     public var named_widgets: HashMap<String, Widget> = HashMap()
     public var selected_widget: Widget? = null
 
