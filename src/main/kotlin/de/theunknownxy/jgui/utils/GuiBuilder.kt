@@ -50,9 +50,9 @@ abstract class BContainer(widget: Widget) : BWidget(widget) {
         add(widget.widget)
     }
 
-    fun spacer(init: BSpacer.() -> Unit) = initWidget(BSpacer(), init)
-    fun vbox(init: BVBox.() -> Unit) = initWidget(BVBox(), init)
-    fun hbox(init: BHBox.() -> Unit) = initWidget(BHBox(), init)
+    fun spacer(init: BSpacer.() -> Unit) = initWidget(BSpacer(this.widget.root), init)
+    fun vbox(init: BVBox.() -> Unit) = initWidget(BVBox(this.widget.root), init)
+    fun hbox(init: BHBox.() -> Unit) = initWidget(BHBox(this.widget.root), init)
 }
 
 abstract class BMultiContainer(widget: Widget) : BContainer(widget) {
@@ -68,13 +68,18 @@ abstract class BSingleContainer(widget: Widget) : BContainer(widget) {
     }
 }
 
-class BVBox : BMultiContainer(VerticalBox())
-class BHBox : BMultiContainer(HorizontalBox())
-class BRoot : BSingleContainer(Root())
-class BSpacer : BWidget(Spacer())
+class BVBox(root: Root?) : BMultiContainer(VerticalBox(root))
+class BHBox(root: Root?) : BMultiContainer(HorizontalBox(root))
+class BSpacer(root: Root?) : BWidget(Spacer(root))
+class BRoot : BSingleContainer(Root()) {
+    public fun setRoot() {
+        this.widget.root = this.widget as Root
+    }
+}
 
 fun root(init: BRoot.() -> Unit): Root {
     val root = BRoot()
+    root.setRoot()
     root.init()
     return root.widget as Root
 }

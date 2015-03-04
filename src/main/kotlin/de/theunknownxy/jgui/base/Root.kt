@@ -4,7 +4,7 @@ import de.theunknownxy.jgui.container.SingleContainer
 import java.util.HashMap
 import de.theunknownxy.jgui.event.MouseButton
 
-public class Root : SingleContainer() {
+public class Root : SingleContainer(null) {
     public var named_widgets: HashMap<String, Widget> = HashMap()
     public var selected_widget: Widget? = null
 

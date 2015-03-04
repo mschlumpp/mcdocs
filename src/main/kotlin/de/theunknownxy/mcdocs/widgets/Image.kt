@@ -5,8 +5,9 @@ import net.minecraft.util.ResourceLocation
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Gui
 import org.lwjgl.opengl.GL11
+import de.theunknownxy.jgui.base.Root
 
-class Image : Widget() {
+class Image(root: Root?) : Widget(root) {
     var gui: Gui? = null
     var tex: ResourceLocation? = null
 

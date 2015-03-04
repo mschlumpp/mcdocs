@@ -6,8 +6,9 @@ import net.minecraft.client.gui.GuiScreen
 import net.minecraft.client.Minecraft
 import de.theunknownxy.jgui.base.Point
 import de.theunknownxy.jgui.event.MouseButton
+import de.theunknownxy.jgui.base.Root
 
-public class TextField : Widget() {
+public class TextField(root: Root?) : Widget(root) {
     var gui: GuiScreen? = null
     private var textfield: GuiTextField? = null // Initialize it lazy
     public var content: String

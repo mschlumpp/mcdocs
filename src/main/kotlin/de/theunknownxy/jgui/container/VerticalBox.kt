@@ -2,8 +2,9 @@ package de.theunknownxy.jgui.container
 
 import de.theunknownxy.jgui.layout.ExpandingPolicy
 import de.theunknownxy.jgui.layout.FixedPolicy
+import de.theunknownxy.jgui.base.Root
 
-public class VerticalBox : MultiContainer() {
+public class VerticalBox(root: Root?) : MultiContainer(root) {
     override fun recalculateChildren() {
         // Step 1: Remove space used by Fixed and collect the total importance of Expanding elements
         var available_space = this.height

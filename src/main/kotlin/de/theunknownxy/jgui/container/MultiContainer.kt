@@ -4,8 +4,9 @@ import de.theunknownxy.jgui.base.Point
 import de.theunknownxy.jgui.event.MouseButton
 import de.theunknownxy.jgui.base.Widget
 import java.util.ArrayList
+import de.theunknownxy.jgui.base.Root
 
-public abstract class MultiContainer : Container() {
+public abstract class MultiContainer(root: Root?) : Container(root) {
     // TODO: Override width setter so that width == children.max(fixed? -> width)
     public var children: MutableList<Widget> = ArrayList()
 

@@ -4,7 +4,7 @@ import de.theunknownxy.jgui.event.MouseButton
 import de.theunknownxy.jgui.layout.Constraint
 import de.theunknownxy.jgui.layout.ExpandingPolicy
 
-public abstract class Widget {
+public abstract class Widget(public var root: Root?) {
     public var suspended: Boolean = false
         set(value) {
             $suspended = value

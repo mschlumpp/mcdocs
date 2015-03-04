@@ -5,8 +5,9 @@ import de.theunknownxy.jgui.utils.BContainer
 import net.minecraft.util.ResourceLocation
 import net.minecraft.client.gui.Gui
 import net.minecraft.client.gui.GuiScreen
+import de.theunknownxy.jgui.base.Root
 
-class BImage : BWidget(Image()) {
+class BImage(root: Root?) : BWidget(Image(root)) {
     fun path(res_path: String) {
         val img = widget as Image
         img.tex = ResourceLocation(res_path)
@@ -18,7 +19,7 @@ class BImage : BWidget(Image()) {
     }
 }
 
-class BTextField : BWidget(TextField()) {
+class BTextField(root: Root?) : BWidget(TextField(root)) {
     fun gui(gui: GuiScreen) {
         val field = widget as TextField
         field.gui = gui
@@ -30,5 +31,5 @@ class BTextField : BWidget(TextField()) {
     }
 }
 
-fun BContainer.image(init: BImage.() -> Unit) = initWidget(BImage(), init)
-fun BContainer.textfield(init: BTextField.() -> Unit) = initWidget(BTextField(), init)
+fun BContainer.image(init: BImage.() -> Unit) = initWidget(BImage(this.widget.root), init)
+fun BContainer.textfield(init: BTextField.() -> Unit) = initWidget(BTextField(this.widget.root), init)
