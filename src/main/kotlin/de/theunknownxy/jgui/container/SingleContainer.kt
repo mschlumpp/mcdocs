@@ -15,5 +15,9 @@ public abstract class SingleContainer : Container() {
         return null
     }
 
+    override fun onUpdate() {
+        child?.onUpdate()
+    }
+
     override fun draw() = child?.draw()
 }
