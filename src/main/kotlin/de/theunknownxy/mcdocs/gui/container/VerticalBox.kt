@@ -1,8 +1,8 @@
-package de.theunknownxy.jgui.container
+package de.theunknownxy.mcdocs.gui.container
 
-import de.theunknownxy.jgui.layout.ExpandingPolicy
-import de.theunknownxy.jgui.layout.FixedPolicy
-import de.theunknownxy.jgui.base.Root
+import de.theunknownxy.mcdocs.gui.layout.ExpandingPolicy
+import de.theunknownxy.mcdocs.gui.layout.FixedPolicy
+import de.theunknownxy.mcdocs.gui.base.Root
 
 public class VerticalBox(root: Root?) : MultiContainer(root) {
     override fun recalculateChildren() {
@@ -27,7 +27,7 @@ public class VerticalBox(root: Root?) : MultiContainer(root) {
             val policy = widget.constraint.vertical
             if (policy is ExpandingPolicy) {
                 widget.height = policy.importance / expanding_sum * available_space
-            } else if(policy is FixedPolicy) {
+            } else if (policy is FixedPolicy) {
                 widget.height = policy.value;
             }
         }
@@ -40,9 +40,9 @@ public class VerticalBox(root: Root?) : MultiContainer(root) {
 
             // Set width depending on policy
             val horizontal = widget.constraint.horizontal
-            if(horizontal is FixedPolicy) {
+            if (horizontal is FixedPolicy) {
                 widget.width = horizontal.value
-            } else if(horizontal is ExpandingPolicy) {
+            } else if (horizontal is ExpandingPolicy) {
                 widget.width = this.width
             }
 

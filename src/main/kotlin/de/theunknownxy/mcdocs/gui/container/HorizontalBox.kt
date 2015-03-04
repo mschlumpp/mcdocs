@@ -1,8 +1,8 @@
-package de.theunknownxy.jgui.container
+package de.theunknownxy.mcdocs.gui.container
 
-import de.theunknownxy.jgui.layout.ExpandingPolicy
-import de.theunknownxy.jgui.layout.FixedPolicy
-import de.theunknownxy.jgui.base.Root
+import de.theunknownxy.mcdocs.gui.layout.ExpandingPolicy
+import de.theunknownxy.mcdocs.gui.layout.FixedPolicy
+import de.theunknownxy.mcdocs.gui.base.Root
 
 public class HorizontalBox(root: Root?) : MultiContainer(root) {
     // TODO: Deduplicate this code
@@ -28,7 +28,7 @@ public class HorizontalBox(root: Root?) : MultiContainer(root) {
             val policy = widget.constraint.horizontal
             if (policy is ExpandingPolicy) {
                 widget.width = policy.importance / expanding_sum * available_space
-            } else if(policy is FixedPolicy) {
+            } else if (policy is FixedPolicy) {
                 widget.width = policy.value;
             }
         }
@@ -41,10 +41,10 @@ public class HorizontalBox(root: Root?) : MultiContainer(root) {
 
             // Set height depending on policy
             val vertical = widget.constraint.vertical
-            if(vertical is FixedPolicy) {
+            if (vertical is FixedPolicy) {
                 widget.height = vertical.value
-            } else if(vertical is ExpandingPolicy) {
-                widget.height= this.width
+            } else if (vertical is ExpandingPolicy) {
+                widget.height = this.width
             }
 
             // Stack widget on previous

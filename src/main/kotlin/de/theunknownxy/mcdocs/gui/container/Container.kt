@@ -1,7 +1,7 @@
-package de.theunknownxy.jgui.container
+package de.theunknownxy.mcdocs.gui.container
 
-import de.theunknownxy.jgui.base.Widget
-import de.theunknownxy.jgui.base.Root
+import de.theunknownxy.mcdocs.gui.base.Widget
+import de.theunknownxy.mcdocs.gui.base.Root
 
 public abstract class Container(root: Root?) : Widget(root) {
     protected abstract fun recalculateChildren()

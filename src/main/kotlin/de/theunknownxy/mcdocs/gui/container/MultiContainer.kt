@@ -1,10 +1,10 @@
-package de.theunknownxy.jgui.container
+package de.theunknownxy.mcdocs.gui.container
 
-import de.theunknownxy.jgui.base.Point
-import de.theunknownxy.jgui.event.MouseButton
-import de.theunknownxy.jgui.base.Widget
+import de.theunknownxy.mcdocs.gui.base.Point
+import de.theunknownxy.mcdocs.gui.event.MouseButton
+import de.theunknownxy.mcdocs.gui.base.Widget
 import java.util.ArrayList
-import de.theunknownxy.jgui.base.Root
+import de.theunknownxy.mcdocs.gui.base.Root
 
 public abstract class MultiContainer(root: Root?) : Container(root) {
     // TODO: Override width setter so that width == children.max(fixed? -> width)

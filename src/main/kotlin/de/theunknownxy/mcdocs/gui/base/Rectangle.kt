@@ -1,4 +1,4 @@
-package de.theunknownxy.jgui.base
+package de.theunknownxy.mcdocs.gui.base
 
 public class Rectangle(var x: Float, var y: Float, var width: Float, var height: Float) {
     public fun topleft(): Point {

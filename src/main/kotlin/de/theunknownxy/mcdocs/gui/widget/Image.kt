@@ -1,18 +1,18 @@
-package de.theunknownxy.mcdocs.widgets
+package de.theunknownxy.mcdocs.gui.widget
 
-import de.theunknownxy.jgui.base.Widget
+import de.theunknownxy.mcdocs.gui.base.Widget
+import de.theunknownxy.mcdocs.gui.base.Root
 import net.minecraft.util.ResourceLocation
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Gui
 import org.lwjgl.opengl.GL11
-import de.theunknownxy.jgui.base.Root
 
 class Image(root: Root?) : Widget(root) {
     var gui: Gui? = null
     var tex: ResourceLocation? = null
 
     override fun draw() {
-        if(tex != null && gui != null) {
+        if (tex != null && gui != null) {
             GL11.glPushMatrix()
             GL11.glTranslatef(x, y, 0f)
 

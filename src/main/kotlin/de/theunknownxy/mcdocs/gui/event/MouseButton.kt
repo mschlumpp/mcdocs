@@ -1,4 +1,4 @@
-package de.theunknownxy.jgui.event
+package de.theunknownxy.mcdocs.gui.event
 
 public enum class MouseButton {
     LEFT

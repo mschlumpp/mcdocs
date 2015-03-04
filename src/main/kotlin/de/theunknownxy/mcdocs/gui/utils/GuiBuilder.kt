@@ -1,16 +1,16 @@
-package de.theunknownxy.jgui.utils
+package de.theunknownxy.mcdocs.gui.utils
 
-import de.theunknownxy.jgui.base.Root
-import de.theunknownxy.jgui.base.Widget
-import de.theunknownxy.jgui.layout.Constraint
-import de.theunknownxy.jgui.layout.ExpandingPolicy
-import de.theunknownxy.jgui.layout.Policy
-import de.theunknownxy.jgui.layout.FixedPolicy
-import de.theunknownxy.jgui.widget.Spacer
-import de.theunknownxy.jgui.container.VerticalBox
-import de.theunknownxy.jgui.container.MultiContainer
-import de.theunknownxy.jgui.container.SingleContainer
-import de.theunknownxy.jgui.container.HorizontalBox
+import de.theunknownxy.mcdocs.gui.base.Root
+import de.theunknownxy.mcdocs.gui.base.Widget
+import de.theunknownxy.mcdocs.gui.layout.Constraint
+import de.theunknownxy.mcdocs.gui.layout.ExpandingPolicy
+import de.theunknownxy.mcdocs.gui.layout.Policy
+import de.theunknownxy.mcdocs.gui.layout.FixedPolicy
+import de.theunknownxy.mcdocs.gui.widget.Spacer
+import de.theunknownxy.mcdocs.gui.container.VerticalBox
+import de.theunknownxy.mcdocs.gui.container.MultiContainer
+import de.theunknownxy.mcdocs.gui.container.SingleContainer
+import de.theunknownxy.mcdocs.gui.container.HorizontalBox
 
 class BPolicy {
     var policy: Policy = ExpandingPolicy(1f)

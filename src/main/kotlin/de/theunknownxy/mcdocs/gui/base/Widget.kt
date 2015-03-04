@@ -1,14 +1,14 @@
-package de.theunknownxy.jgui.base
+package de.theunknownxy.mcdocs.gui.base
 
-import de.theunknownxy.jgui.event.MouseButton
-import de.theunknownxy.jgui.layout.Constraint
-import de.theunknownxy.jgui.layout.ExpandingPolicy
+import de.theunknownxy.mcdocs.gui.event.MouseButton
+import de.theunknownxy.mcdocs.gui.layout.Constraint
+import de.theunknownxy.mcdocs.gui.layout.ExpandingPolicy
 
 public abstract class Widget(public var root: Root?) {
     public var suspended: Boolean = false
         set(value) {
             $suspended = value
-            if(!value) areaChanged()
+            if (!value) areaChanged()
         }
     public var x: Float = 0f
         set(value) {
@@ -42,13 +42,20 @@ public abstract class Widget(public var root: Root?) {
     public var constraint: Constraint = Constraint(ExpandingPolicy(1f), ExpandingPolicy(1f))
 
     protected fun areaChanged() {
-        if(!suspended) onAreaChanged()
+        if (!suspended) onAreaChanged()
     }
 
     public abstract fun draw()
     public open fun onMouseClick(pos: Point, button: MouseButton): Widget? = null
-    public open fun onKeyTyped(ch: Char, t: Int) {}
-    public open fun onUpdate() {}
-    protected open fun onAreaChanged() {}
-    protected open fun onUnfocus() {}
+    public open fun onKeyTyped(ch: Char, t: Int) {
+    }
+
+    public open fun onUpdate() {
+    }
+
+    protected open fun onAreaChanged() {
+    }
+
+    protected open fun onUnfocus() {
+    }
 }

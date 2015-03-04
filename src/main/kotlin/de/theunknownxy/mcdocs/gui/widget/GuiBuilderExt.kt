@@ -1,11 +1,11 @@
-package de.theunknownxy.mcdocs.widgets
+package de.theunknownxy.mcdocs.gui.widget
 
-import de.theunknownxy.jgui.utils.BWidget
-import de.theunknownxy.jgui.utils.BContainer
+import de.theunknownxy.mcdocs.gui.base.Root
+import de.theunknownxy.mcdocs.gui.utils.BWidget
+import de.theunknownxy.mcdocs.gui.utils.BContainer
 import net.minecraft.util.ResourceLocation
 import net.minecraft.client.gui.Gui
 import net.minecraft.client.gui.GuiScreen
-import de.theunknownxy.jgui.base.Root
 
 class BImage(root: Root?) : BWidget(Image(root)) {
     fun path(res_path: String) {

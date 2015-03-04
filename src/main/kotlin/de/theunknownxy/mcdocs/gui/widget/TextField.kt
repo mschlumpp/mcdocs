@@ -1,16 +1,13 @@
-package de.theunknownxy.mcdocs.widgets
+package de.theunknownxy.mcdocs.gui.widget
 
-import de.theunknownxy.jgui.base.Widget
-import net.minecraft.client.gui.GuiTextField
-import net.minecraft.client.gui.GuiScreen
-import net.minecraft.client.Minecraft
-import de.theunknownxy.jgui.base.Point
-import de.theunknownxy.jgui.event.MouseButton
-import de.theunknownxy.jgui.base.Root
+import de.theunknownxy.mcdocs.gui.base.Widget
+import de.theunknownxy.mcdocs.gui.base.Point
+import de.theunknownxy.mcdocs.gui.event.MouseButton
+import de.theunknownxy.mcdocs.gui.base.Root
 
 public class TextField(root: Root?) : Widget(root) {
-    var gui: GuiScreen? = null
-    private var textfield: GuiTextField? = null // Initialize it lazy
+    var gui: net.minecraft.client.gui.GuiScreen? = null
+    private var textfield: net.minecraft.client.gui.GuiTextField? = null // Initialize it lazy
     public var content: String
         set(str: String) {
             lazy_init()
@@ -23,7 +20,7 @@ public class TextField(root: Root?) : Widget(root) {
 
     private fun lazy_init() {
         if (textfield == null) {
-            textfield = GuiTextField(Minecraft.getMinecraft().fontRenderer, this.x.toInt(), this.y.toInt(), this.width.toInt(), this.height.toInt())
+            textfield = net.minecraft.client.gui.GuiTextField(net.minecraft.client.Minecraft.getMinecraft().fontRenderer, this.x.toInt(), this.y.toInt(), this.width.toInt(), this.height.toInt())
         }
     }
 

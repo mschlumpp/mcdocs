@@ -1,8 +1,8 @@
-package de.theunknownxy.jgui.base
+package de.theunknownxy.mcdocs.gui.base
 
-import de.theunknownxy.jgui.container.SingleContainer
+import de.theunknownxy.mcdocs.gui.container.SingleContainer
 import java.util.HashMap
-import de.theunknownxy.jgui.event.MouseButton
+import de.theunknownxy.mcdocs.gui.event.MouseButton
 
 public class Root : SingleContainer(null) {
     public var named_widgets: HashMap<String, Widget> = HashMap()
@@ -10,7 +10,7 @@ public class Root : SingleContainer(null) {
 
     override fun onMouseClick(pos: Point, button: MouseButton): Widget? {
         val new_selected = super.onMouseClick(pos, button)
-        if(new_selected != selected_widget) {
+        if (new_selected != selected_widget) {
             // Unfocus old one
             selected_widget?.onUnfocus()
             selected_widget = new_selected
