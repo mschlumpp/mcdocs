@@ -44,7 +44,7 @@ public class HorizontalBox(root: Root?) : MultiContainer(root) {
             if (vertical is FixedPolicy) {
                 widget.height = vertical.value
             } else if (vertical is ExpandingPolicy) {
-                widget.height = this.width
+                widget.height = this.height
             }
 
             // Stack widget on previous
