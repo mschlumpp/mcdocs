@@ -4,6 +4,8 @@ import de.theunknownxy.mcdocs.gui.base.Widget
 import de.theunknownxy.mcdocs.gui.base.Point
 import de.theunknownxy.mcdocs.gui.event.MouseButton
 import de.theunknownxy.mcdocs.gui.base.Root
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiTextField
 
 public class TextField(root: Root?) : Widget(root) {
     private var textfield: net.minecraft.client.gui.GuiTextField? = null // Initialize it lazy
@@ -19,7 +21,7 @@ public class TextField(root: Root?) : Widget(root) {
 
     private fun lazy_init() {
         if (textfield == null) {
-            textfield = net.minecraft.client.gui.GuiTextField(net.minecraft.client.Minecraft.getMinecraft().fontRenderer, this.x.toInt(), this.y.toInt(), this.width.toInt(), this.height.toInt())
+            textfield = GuiTextField(Minecraft.getMinecraft().fontRenderer, this.x.toInt(), this.y.toInt(), this.width.toInt(), this.height.toInt())
         }
     }
 
