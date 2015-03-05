@@ -6,6 +6,7 @@ import de.theunknownxy.mcdocs.gui.event.MouseButton
 import net.minecraft.client.gui.GuiScreen
 
 public class Root(public val gui: GuiScreen) : SingleContainer(null) {
+    public var mouse_pos: Point = Point(0f, 0f)
     public var named_widgets: HashMap<String, Widget> = HashMap()
     public var selected_widget: Widget? = null
 

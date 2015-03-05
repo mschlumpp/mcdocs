@@ -89,6 +89,18 @@ class BTextField(root: Root?) : BWidget(TextField(root)) {
     }
 }
 
+class BButton(root: Root?) : BWidget(Button(root)) {
+    fun text(str: String) {
+        val button = widget as Button
+        button.text = str
+    }
+
+    fun onClick(callback: (Button) -> Unit) {
+        val button = widget as Button
+        button.callback = callback
+    }
+}
+
 class BRoot(gui: GuiScreen) : BSingleContainer(Root(gui)) {
     public fun setRoot() {
         this.widget.root = this.widget as Root
@@ -100,6 +112,7 @@ fun BContainer.textfield(init: BTextField.() -> Unit) = initWidget(BTextField(th
 fun BContainer.spacer(init: BSpacer.() -> Unit) = initWidget(BSpacer(this.widget.root), init)
 fun BContainer.vbox(init: BVBox.() -> Unit) = initWidget(BVBox(this.widget.root), init)
 fun BContainer.hbox(init: BHBox.() -> Unit) = initWidget(BHBox(this.widget.root), init)
+fun BContainer.button(init: BButton.() -> Unit) = initWidget(BButton(this.widget.root), init)
 
 fun root(gui: GuiScreen, init: BRoot.() -> Unit): Root {
     val root = BRoot(gui)
