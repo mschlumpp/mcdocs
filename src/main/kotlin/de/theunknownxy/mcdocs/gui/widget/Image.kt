@@ -11,6 +11,7 @@ class Image(root: Root?) : Widget(root) {
 
     override fun draw() {
         if (tex != null) {
+            GL11.glColor3f(1f, 1f, 1f)
             GL11.glPushMatrix()
             GL11.glTranslatef(x, y, 0f)
 
