@@ -4,6 +4,7 @@ import de.theunknownxy.mcdocs.docs.DocumentationNodeRef
 import de.theunknownxy.mcdocs.docs.DocumentationNode
 import java.io.File
 import javax.xml.parsers.SAXParserFactory
+import java.util.ArrayList
 
 public class FileDocumentationLoader(dir_path: String) : DocumentationLoader {
     private val root_path = File(dir_path)
@@ -18,10 +19,20 @@ public class FileDocumentationLoader(dir_path: String) : DocumentationLoader {
             throw IllegalArgumentException("The path '" + filepath.toString() + "' is not within '" + root_path.toString())
         }
 
+        var childs: MutableList<DocumentationNodeRef> = ArrayList()
         // Construct the real filesystem path
         if(filepath.isDirectory()) {
+            // Search for childs
+            for(child in filepath.list()) {
+                val child_file = File(child)
+                if(child_file.getName() != "index.xml") {
+                    childs.add(DocumentationNodeRef(root_path.relativePath(child_file).replace(".xml", "")))
+                }
+            }
+
             // The actual content is within the folder
             filepath = File(filepath, "index" + extension)
+
         } else {
             // Append the .doc suffix if it's a file
             filepath = File(filepath.getParent(), filepath.getName() + extension)
@@ -33,7 +44,8 @@ public class FileDocumentationLoader(dir_path: String) : DocumentationLoader {
         val handler = XMLParserHandler()
         parser.parse(filepath, handler)
 
-        //TODO: Search for childrens
-        return DocumentationNode(ref, handler.document.title, handler.document.content!!)
+        val node = DocumentationNode(ref, handler.document.title, handler.document.content!!)
+        node.children = childs
+        return node
     }
 }
