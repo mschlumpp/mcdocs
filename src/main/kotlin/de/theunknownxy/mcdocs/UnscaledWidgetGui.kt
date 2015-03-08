@@ -46,6 +46,7 @@ public abstract class UnscaledWidgetGui : GuiScreen() {
             old_res_height = mc.displayHeight
             guiScale = ScaledResolution(mc, old_res_width, old_res_height).getScaleFactor().toFloat()
             guiScale = 1 / guiScale
+            guiScale *= 2f
             // Set root dimensions
             root?.rect = Rectangle(0f, 0f, this.width.toFloat() * 1 / guiScale, this.height.toFloat() * 1 / guiScale)
         }
