@@ -66,7 +66,7 @@ public class FileDocumentationLoader(private val root_path: Path) : Documentatio
             content?.blocks?.add(p)
         }
 
-        val node = DocumentationNode(ref, title!!, content!!)
+        val node = DocumentationNode(ref, title!!, content)
         node.children = childs
         return node
     }
