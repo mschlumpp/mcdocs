@@ -24,6 +24,8 @@ public class TreeBar(root: Root?) : Widget(root) {
                     // Highlight item on hover and store it
                     ecol = 0xFFFFFF
                     hovered_item = node
+                } else if(node == backend.current_page) {
+                    ecol = 0x99FF99
                 }
                 fontrenderer.drawString(text, this.x.toInt(), (this.y + dy).toInt(), ecol)
                 dy += 9
@@ -32,6 +34,9 @@ public class TreeBar(root: Root?) : Widget(root) {
             if (backend.current_path != backend.root) {
                 // Draw the up entry
                 drawEntry(backend.current_path.parent(), "...", 0xDDDDDD)
+            } else {
+                // Or leave some space
+                dy += 9
             }
             val children = backend.getChildren(backend.current_path)
             for (child in children) {
