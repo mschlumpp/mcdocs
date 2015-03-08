@@ -6,8 +6,7 @@ import java.io.File
 import javax.xml.parsers.SAXParserFactory
 import java.util.ArrayList
 
-public class FileDocumentationLoader(dir_path: String) : DocumentationLoader {
-    private val root_path = File(dir_path)
+public class FileDocumentationLoader(private val root_path: File) : DocumentationLoader {
     private val extension = ".xml"
 
     override fun load(ref: DocumentationNodeRef): DocumentationNode {
