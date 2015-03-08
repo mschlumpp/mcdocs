@@ -6,6 +6,8 @@ import cpw.mods.fml.common.FMLCommonHandler
 public class ClientProxy : CommonProxy() {
     override fun setupKeys() {
         ClientRegistry.registerKeyBinding(KeyBindings.openDocBinding)
-        FMLCommonHandler.instance().bus().register(KeyInputHandler())
+        var keyhandler = KeyInputHandler()
+        keyhandler.init()
+        FMLCommonHandler.instance().bus().register(keyhandler)
     }
 }

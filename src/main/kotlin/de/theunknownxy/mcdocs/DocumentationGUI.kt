@@ -1,10 +1,19 @@
 package de.theunknownxy.mcdocs
 
-import net.minecraft.client.gui.GuiScreen
+import de.theunknownxy.mcdocs.gui.utils.*
+import de.theunknownxy.mcdocs.docs.DocumentationBackend
 
-public class DocumentationGUI : GuiScreen() {
-    override fun drawScreen(par1: Int, par2: Int, par3: Float) {
-        this.drawDefaultBackground()
-        super.drawScreen(par1, par2, par3)
+public class DocumentationGUI(val backend: DocumentationBackend) : UnscaledWidgetGui() {
+    override fun initGui() {
+        root = root(this, {
+            hbox {
+                spacer { hpolicy { expanding(15f) } }
+                vbox {
+                    hpolicy { expanding(70f) }
+                    image { path("mcdocs:textures/gui/background.png") }
+                }
+                spacer { hpolicy { expanding(15f) } }
+            }
+        })
     }
 }
