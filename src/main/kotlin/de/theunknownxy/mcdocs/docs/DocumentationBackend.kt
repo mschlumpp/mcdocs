@@ -11,7 +11,7 @@ public class DocumentationBackend(loader: DocumentationLoader) {
 
     public fun navigate(path: DocumentationNodeRef) {
         val node = cache[path]
-        if(node.children.size() > 0) {
+        if(node.children.size() > 0 && path.parent() != current_path) {
             current_path = node.path
         }
         if(node.content != null) {
