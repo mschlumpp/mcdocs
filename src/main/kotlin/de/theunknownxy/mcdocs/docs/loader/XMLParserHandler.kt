@@ -2,8 +2,8 @@ package de.theunknownxy.mcdocs.docs.loader
 
 import org.xml.sax.helpers.DefaultHandler
 import org.xml.sax.Attributes
-import java.util.Stack
 import org.xml.sax.SAXException
+import java.util.Stack
 import de.theunknownxy.mcdocs.docs.Content
 import de.theunknownxy.mcdocs.docs.ImageElement
 import de.theunknownxy.mcdocs.docs.ParagraphElement
@@ -14,169 +14,297 @@ import de.theunknownxy.mcdocs.docs.ItalicCommand
 import de.theunknownxy.mcdocs.docs.LinkCommand
 import de.theunknownxy.mcdocs.docs.HeadingElement
 
-private enum class State {
-    INVALID
-    DOCUMENT
-    TITLE
-    CONTENT
-    PARAGRAPH
-    LINK
-    HEADING
-}
-
-private enum class FormatState {
-    BOLD
-    ITALIC
-    UNDERLINE
-}
-
 public class ParsedDocument {
     var title: String = ""
     var content: Content? = Content()
 }
 
-public class XMLParserHandler : DefaultHandler() {
-    var document: ParsedDocument = ParsedDocument()
-    var state: Stack<State> = Stack()
+private abstract class XMLState(protected val handler: XMLParserHandler) {
+    abstract fun startElement(uri: String, localName: String, qName: String, attributes: Attributes)
+    abstract fun endElement(uri: String?, localName: String, qName: String)
+    abstract fun characters(str: String)
+}
 
-    // For the PARAGRAPH stack
-    var paragraph_elem: ParagraphElement? = null
-    var paragraph_formatstack: Stack<FormatState> = Stack()
-
-    // For the LINK state
-    var link_ref = ""
-    var link_text = ""
-
-    // For the HEADING state
-    var heading_level = 0
-    var heading_text = ""
-
-    override fun startDocument() {
-        state.push(State.INVALID)
+/**
+ * Top-level state
+ */
+private class XMLStateStart(handler: XMLParserHandler) : XMLState(handler) {
+    override fun startElement(uri: String, localName: String, qName: String, attributes: Attributes) {
+        if (qName.equalsIgnoreCase("document")) {
+            handler.xmlstate.push(XMLStateDocument(handler))
+        } else {
+            throw SAXException("Invalid tag '" + qName + "' in top level")
+        }
     }
 
-    override fun endDocument() {
-        assert(state.pop() == State.INVALID)
+    override fun endElement(uri: String?, localName: String, qName: String) {
+        throw SAXException("Invalid end tag '" + qName + "' at top level")
+    }
+
+    override fun characters(str: String) {
+    }
+}
+
+/**
+ * Within document tag
+ */
+private class XMLStateDocument(handler: XMLParserHandler) : XMLState(handler) {
+    override fun startElement(uri: String, localName: String, qName: String, attributes: Attributes) {
+        if (qName.equalsIgnoreCase("title")) {
+            handler.xmlstate.push(XMLStateTitle(handler))
+        } else if (qName.equalsIgnoreCase("content")) {
+            handler.xmlstate.push(XMLStateContent(handler))
+        }
+    }
+
+    override fun endElement(uri: String?, localName: String, qName: String) {
+        if (qName.equalsIgnoreCase("document")) {
+            assert(handler.xmlstate.pop() === this)
+        } else {
+            throw SAXException("Invalid end tag '" + qName + "' in document tag")
+        }
+    }
+
+    override fun characters(str: String) {
+    }
+}
+
+/**
+ * Within title tag
+ */
+private class XMLStateTitle(handler: XMLParserHandler) : XMLState(handler) {
+    private var title: String = ""
+
+    override fun startElement(uri: String, localName: String, qName: String, attributes: Attributes) {
+        throw SAXException("No tags are allowed within the title tag")
+    }
+
+    override fun endElement(uri: String?, localName: String, qName: String) {
+        if (qName.equalsIgnoreCase("title")) {
+            assert(handler.xmlstate.pop() === this)
+            handler.document.title = title
+        } else {
+            throw SAXException("Invalid end tag '" + qName + "' in title tag")
+        }
+    }
+
+    override fun characters(str: String) {
+        title += str
+    }
+}
+
+/**
+ * Within content tag
+ */
+private class XMLStateContent(handler: XMLParserHandler) : XMLState(handler) {
+    override fun startElement(uri: String, localName: String, qName: String, attributes: Attributes) {
+        if (qName.equalsIgnoreCase("img")) {
+            val src: String? = attributes.getValue("src")
+            if (src == null) {
+                throw SAXException("image tag must have a src attribute")
+            }
+            handler.xmlstate.push(XMLStateImage(handler, src))
+        } else if (qName.equalsIgnoreCase("p")) {
+            handler.xmlstate.push(XMLStateParagraph(handler))
+        } else if (qName.equalsIgnoreCase("h1")) {
+            handler.xmlstate.push(XMLStateHeading(handler, 1))
+        } else if (qName.equalsIgnoreCase("h2")) {
+            handler.xmlstate.push(XMLStateHeading(handler, 2))
+        } else if (qName.equalsIgnoreCase("h3")) {
+            handler.xmlstate.push(XMLStateHeading(handler, 3))
+        } else {
+            throw SAXException("Invalid tag '" + qName + "' in content tag")
+        }
+    }
+
+    override fun endElement(uri: String?, localName: String, qName: String) {
+        if (qName.equalsIgnoreCase("content")) {
+            assert(handler.xmlstate.pop() === this)
+        } else {
+            throw SAXException("Invalid end tag '" + qName + "' in content")
+        }
+    }
+
+    override fun characters(str: String) {
+    }
+}
+
+/**
+ * Within img tag
+ */
+private class XMLStateImage(handler: XMLParserHandler, private val src: String) : XMLState(handler) {
+    override fun startElement(uri: String, localName: String, qName: String, attributes: Attributes) {
+        throw SAXException("Tag '" + qName + "' is not allowed in a image tag")
+    }
+
+    override fun endElement(uri: String?, localName: String, qName: String) {
+        if (qName.equalsIgnoreCase("img")) {
+            assert(handler.xmlstate.pop() === this)
+            handler.document.content?.blocks?.add(ImageElement(src))
+        } else {
+            throw SAXException("Invalid end tag '" + qName + "' in img")
+        }
+    }
+
+    override fun characters(str: String) {
+        throw SAXException("Text is not allowed in img")
+    }
+}
+
+/**
+ * Within paragraph
+ */
+private class XMLStateParagraph(handler: XMLParserHandler) : XMLState(handler) {
+    private data class FormatState(var bold: Boolean, var underline: Boolean, var italic: Boolean)
+
+    private var formatstack: Stack<FormatState> = Stack()
+    private var paragraph = ParagraphElement()
+
+    private fun getCurrentFormat(): FormatState {
+        val currentstate = FormatState(false, false, false)
+        for (cmd in formatstack) {
+            if (cmd.bold) {
+                currentstate.bold = true
+            }
+            if (cmd.italic) {
+                currentstate.italic = true
+            }
+            if (cmd.underline) {
+                currentstate.underline = true
+            }
+        }
+        return currentstate
+    }
+
+    private fun pushEmitFormat(format: FormatState) {
+        formatstack.push(format)
+        if (format.bold) {
+            paragraph.commands.add(BoldCommand(true))
+        }
+        if (format.italic) {
+            paragraph.commands.add(ItalicCommand(true))
+        }
+        if (format.underline) {
+            paragraph.commands.add(UnderlineCommand(true))
+        }
+    }
+
+    private fun popEmitFormat() {
+        val oldformat = getCurrentFormat()
+        formatstack.pop()
+        val newformat = getCurrentFormat()
+
+        if (oldformat.italic != newformat.italic) {
+            paragraph.commands.add(ItalicCommand(newformat.italic))
+        }
+        if (oldformat.bold != newformat.bold) {
+            paragraph.commands.add(BoldCommand(newformat.bold))
+        }
+        if (oldformat.underline != newformat.underline) {
+            paragraph.commands.add(UnderlineCommand(newformat.underline))
+        }
     }
 
     override fun startElement(uri: String, localName: String, qName: String, attributes: Attributes) {
-        when (state.peek()) {
-            State.INVALID -> {
-                state.push(State.DOCUMENT)
+        if (qName.equalsIgnoreCase("b")) {
+            pushEmitFormat(FormatState(true, false, false))
+        } else if (qName.equalsIgnoreCase("i")) {
+            pushEmitFormat(FormatState(false, false, true))
+        } else if (qName.equalsIgnoreCase("u")) {
+            pushEmitFormat(FormatState(false, true, false))
+        } else if (qName.equalsIgnoreCase("link")) {
+            val ref: String? = attributes.getValue("ref")
+            if (ref == null) {
+                throw SAXException("A link must have a ref attribute")
             }
-            State.DOCUMENT -> {
-                if (qName.equalsIgnoreCase("title")) {
-                    state.push(State.TITLE)
-                } else if (qName.equalsIgnoreCase("content")) {
-                    state.push(State.CONTENT)
-                }
-            }
-            State.CONTENT -> {
-                if (qName.equalsIgnoreCase("img")) {
-                    val src: String? = attributes.getValue("src")
-                    if (src == null) {
-                        throw SAXException("There needs to be a src attribute in img")
-                    }
-                    document.content?.blocks?.add(ImageElement(src))
-                } else if (qName.equalsIgnoreCase("p")) {
-                    paragraph_elem = ParagraphElement()
-                    state.push(State.PARAGRAPH)
-                } else if (qName.equalsIgnoreCase("h1")) {
-                    state.push(State.HEADING)
-                    heading_level = 1
-                    heading_text = ""
-                } else if (qName.equalsIgnoreCase("h2")) {
-                    state.push(State.HEADING)
-                    heading_level = 2
-                    heading_text = ""
-                } else if (qName.equalsIgnoreCase("h3")) {
-                    state.push(State.HEADING)
-                    heading_level = 3
-                    heading_text = ""
-                }
-
-            }
-            State.PARAGRAPH -> {
-                if (qName.equalsIgnoreCase("b")) {
-                    paragraph_formatstack.push(FormatState.BOLD)
-                    emitFormatCommands()
-                } else if (qName.equalsIgnoreCase("i")) {
-                    paragraph_formatstack.push(FormatState.ITALIC)
-                    emitFormatCommands()
-                } else if (qName.equalsIgnoreCase("u")) {
-                    paragraph_formatstack.push(FormatState.UNDERLINE)
-                    emitFormatCommands()
-                } else if (qName.equalsIgnoreCase("link")) {
-                    state.push(State.LINK)
-                    link_ref = attributes.getValue("ref")
-                    link_text = ""
-                }
-            }
-            else -> {
-                throw SAXException("Invalid element '" + qName + "' when in a '" + state.peek().toString() + "'")
-            }
+            handler.xmlstate.push(XMLStateLink(handler, paragraph, ref))
         }
     }
 
     override fun endElement(uri: String?, localName: String, qName: String) {
         if (qName.equalsIgnoreCase("p")) {
-            assert(state.pop() == State.PARAGRAPH)
-            document.content?.blocks?.add(paragraph_elem!!)
-        } else if (qName.equalsIgnoreCase("b") || qName.equalsIgnoreCase("i") || qName.equalsIgnoreCase("u")) {
-            assert(state.peek() == State.PARAGRAPH)
-            paragraph_formatstack.pop()
-            emitFormatCommands()
-        } else if (qName.equalsIgnoreCase("link")) {
-            assert(state.pop() == State.LINK)
-            assert(state.peek() == State.PARAGRAPH)
-            paragraph_elem?.commands?.add(LinkCommand(link_text, link_ref))
-        } else if (qName.equalsIgnoreCase("document")) {
-            assert(state.pop() == State.DOCUMENT)
-        } else if (qName.equalsIgnoreCase("content")) {
-            assert(state.pop() == State.CONTENT)
-        } else if(qName.equalsIgnoreCase("h1") || qName.equalsIgnoreCase("h2") || qName.equalsIgnoreCase("h3")) {
-            assert(state.pop() == State.HEADING)
-            document.content?.blocks?.add(HeadingElement(heading_level, heading_text))
+            assert(handler.xmlstate.pop() === this)
+            handler.document.content?.blocks?.add(paragraph)
+        } else if (qName.equalsIgnoreCase("b")) {
+            popEmitFormat()
+        } else if (qName.equalsIgnoreCase("i")) {
+            popEmitFormat()
+        } else if (qName.equalsIgnoreCase("u")) {
+            popEmitFormat()
+        } else {
+            throw SAXException("Invalid end tag '" + qName + "' in paragraph")
         }
+    }
+
+    override fun characters(str: String) {
+        paragraph.commands.add(TextCommand(str))
+    }
+}
+
+private class XMLStateHeading(handler: XMLParserHandler, val level: Int) : XMLState(handler) {
+    var text = ""
+
+    override fun startElement(uri: String, localName: String, qName: String, attributes: Attributes) {
+        throw SAXException("Invalid tag '" + qName + "' in heading")
+    }
+
+    override fun endElement(uri: String?, localName: String, qName: String) {
+        if (qName.equalsIgnoreCase("h" + level.toString())) {
+            assert(handler.xmlstate.pop() === this)
+            handler.document.content?.blocks?.add(HeadingElement(level, text))
+        } else {
+            throw SAXException("Invalid end tag '" + qName + " in heading")
+        }
+    }
+
+    override fun characters(str: String) {
+        text += str
+    }
+}
+
+private class XMLStateLink(handler: XMLParserHandler, val p: ParagraphElement, val ref: String) : XMLState(handler) {
+    var text = ""
+
+    override fun startElement(uri: String, localName: String, qName: String, attributes: Attributes) {
+        throw SAXException("Invalid tag '" + qName + "' in link")
+    }
+
+    override fun endElement(uri: String?, localName: String, qName: String) {
+        if (qName.equalsIgnoreCase("link")) {
+            assert(handler.xmlstate.pop() === this)
+            p.commands.add(LinkCommand(text, ref))
+        } else {
+            throw SAXException("Invalid end tag '" + qName + " in link")
+        }
+    }
+
+    override fun characters(str: String) {
+        text += str
+    }
+}
+
+public class XMLParserHandler : DefaultHandler() {
+    var document: ParsedDocument = ParsedDocument()
+    val xmlstate: Stack<XMLState> = Stack()
+
+    override fun startDocument() {
+        xmlstate.push(XMLStateStart(this))
+    }
+
+    override fun endDocument() {
+        assert(xmlstate.pop() is XMLStateStart)
+    }
+
+    override fun startElement(uri: String, localName: String, qName: String, attributes: Attributes) {
+        xmlstate.peek().startElement(uri, localName, qName, attributes)
+    }
+
+    override fun endElement(uri: String?, localName: String, qName: String) {
+        xmlstate.peek().endElement(uri, localName, qName)
     }
 
     override fun characters(ch: CharArray?, start: Int, length: Int) {
         val str: String = java.lang.String(ch, start, length).toString()
-        when (state.peek()) {
-            State.TITLE -> {
-                document.title += str
-                state.pop()
-            }
-            State.PARAGRAPH -> {
-                paragraph_elem?.commands?.add(TextCommand(str))
-            }
-            State.LINK -> {
-                link_text = str
-            }
-            State.HEADING -> {
-                heading_text = str
-            }
-        }
-    }
-
-    private fun emitFormatCommands() {
-        assert(state.peek() == State.PARAGRAPH)
-
-        var hasBold = false
-        var hasItalic = false
-        var hasUnderline = false
-        for (attr in paragraph_formatstack) {
-            when (attr) {
-                FormatState.BOLD -> hasBold = true
-                FormatState.ITALIC -> hasItalic = true
-                FormatState.UNDERLINE -> hasUnderline = true
-            }
-        }
-        val commands = paragraph_elem?.commands
-        if (commands != null) {
-            commands.add(BoldCommand(hasBold))
-            commands.add(UnderlineCommand(hasUnderline))
-            commands.add(ItalicCommand(hasItalic))
-        }
+        xmlstate.peek().characters(str)
     }
 }
