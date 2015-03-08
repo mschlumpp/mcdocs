@@ -7,6 +7,7 @@ import de.theunknownxy.mcdocs.gui.container.*
 import de.theunknownxy.mcdocs.gui.widget.*
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.util.ResourceLocation
+import de.theunknownxy.mcdocs.docs.DocumentationBackend
 
 /****************
  * Base classes *
@@ -101,6 +102,13 @@ class BButton(root: Root?) : BWidget(Button(root)) {
     }
 }
 
+class BTreeBar(root: Root?) : BWidget(TreeBar(root)) {
+    fun backend(backend: DocumentationBackend) {
+        val bar = widget as TreeBar
+        bar.backend = backend
+    }
+}
+
 class BRoot(gui: GuiScreen) : BSingleContainer(Root(gui)) {
     public fun setRoot() {
         this.widget.root = this.widget as Root
@@ -113,6 +121,7 @@ fun BContainer.spacer(init: BSpacer.() -> Unit) = initWidget(BSpacer(this.widget
 fun BContainer.vbox(init: BVBox.() -> Unit) = initWidget(BVBox(this.widget.root), init)
 fun BContainer.hbox(init: BHBox.() -> Unit) = initWidget(BHBox(this.widget.root), init)
 fun BContainer.button(init: BButton.() -> Unit) = initWidget(BButton(this.widget.root), init)
+fun BContainer.treebar(init: BTreeBar.() -> Unit) = initWidget(BTreeBar(this.widget.root), init)
 
 fun root(gui: GuiScreen, init: BRoot.() -> Unit): Root {
     val root = BRoot(gui)

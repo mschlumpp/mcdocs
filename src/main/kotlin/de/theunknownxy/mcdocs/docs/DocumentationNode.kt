@@ -13,7 +13,7 @@ public data class DocumentationNodeRef(val path: String) {
     }
 }
 
-public class DocumentationNode(val path: DocumentationNodeRef, val title: String, val content: Content) {
+public class DocumentationNode(val path: DocumentationNodeRef, val title: String, val content: Content?) {
     var parent: DocumentationNodeRef? = null
     var children: MutableList<DocumentationNodeRef> = ArrayList()
 }

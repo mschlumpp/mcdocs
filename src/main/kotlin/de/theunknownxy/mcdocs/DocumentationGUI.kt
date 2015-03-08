@@ -7,7 +7,11 @@ public class DocumentationGUI(val backend: DocumentationBackend) : UnscaledWidge
     override fun initGui() {
         root = root(this, {
             hbox {
-                spacer { hpolicy { expanding(15f) } }
+                spacer { hpolicy { expanding(2f) } }
+                treebar {
+                    hpolicy { fixed(160f) }
+                    backend(backend)
+                }
                 vbox {
                     hpolicy { expanding(70f) }
                     image { path("mcdocs:textures/gui/background.png") }

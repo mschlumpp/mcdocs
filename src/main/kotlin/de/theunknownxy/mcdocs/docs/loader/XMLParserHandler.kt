@@ -16,7 +16,7 @@ import de.theunknownxy.mcdocs.docs.HeadingElement
 
 public class ParsedDocument {
     var title: String = ""
-    var content: Content? = Content()
+    var content: Content? = null
 }
 
 private abstract class XMLState(protected val handler: XMLParserHandler) {
@@ -53,6 +53,7 @@ private class XMLStateDocument(handler: XMLParserHandler) : XMLState(handler) {
         if (qName.equalsIgnoreCase("title")) {
             handler.xmlstate.push(XMLStateTitle(handler))
         } else if (qName.equalsIgnoreCase("content")) {
+            handler.document.content = Content()
             handler.xmlstate.push(XMLStateContent(handler))
         }
     }

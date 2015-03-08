@@ -2,48 +2,71 @@ package de.theunknownxy.mcdocs.docs.loader
 
 import de.theunknownxy.mcdocs.docs.DocumentationNodeRef
 import de.theunknownxy.mcdocs.docs.DocumentationNode
-import java.io.File
 import javax.xml.parsers.SAXParserFactory
 import java.util.ArrayList
+import de.theunknownxy.mcdocs.docs.Content
+import de.theunknownxy.mcdocs.docs.ParagraphElement
+import de.theunknownxy.mcdocs.docs.TextCommand
+import java.nio.file.Path
 
-public class FileDocumentationLoader(private val root_path: File) : DocumentationLoader {
+public class FileDocumentationLoader(private val root_path: Path) : DocumentationLoader {
     private val extension = ".xml"
 
     override fun load(ref: DocumentationNodeRef): DocumentationNode {
-        var filepath: File = File(root_path, ref.path)
+        var filepath: Path = root_path.resolve(ref.path)
 
         // Check whether the path is valid
-        filepath = filepath.getAbsoluteFile()
-        if(!root_path.isDescendant(filepath)) {
+        if (!filepath.startsWith(root_path)) {
             throw IllegalArgumentException("The path '" + filepath.toString() + "' is not within '" + root_path.toString())
         }
 
         var childs: MutableList<DocumentationNodeRef> = ArrayList()
         // Construct the real filesystem path
-        if(filepath.isDirectory()) {
+        if (filepath.toFile().isDirectory()) {
             // Search for childs
-            for(child in filepath.list()) {
-                val child_file = File(child)
-                if(child_file.getName() != "index.xml") {
-                    childs.add(DocumentationNodeRef(root_path.relativePath(child_file).replace(".xml", "")))
+            for (child in filepath.toFile().list()) {
+                if (child != "index.xml") {
+                    val childpath = filepath.resolve(child.replace(".xml", ""))
+                    childs.add(DocumentationNodeRef(root_path.relativize(childpath).toString()))
                 }
             }
 
             // The actual content is within the folder
-            filepath = File(filepath, "index" + extension)
+            filepath = filepath.resolve("index" + extension)
 
         } else {
-            // Append the .doc suffix if it's a file
-            filepath = File(filepath.getParent(), filepath.getName() + extension)
+            // Append the .xml suffix if it's a file
+            filepath = filepath.getParent().resolve((filepath.getFileName().toString() + extension))
+        }
+
+        if (!filepath.toFile().exists()) {
+            val node = DocumentationNode(ref, "FIXME", null)
+            node.children = childs
+            return node
         }
 
         // Read and parse the file
-        val spf = SAXParserFactory.newInstance()
-        val parser = spf.newSAXParser()
-        val handler = XMLParserHandler()
-        parser.parse(filepath, handler)
+        var title: String?
+        var content: Content?
+        try {
+            val spf = SAXParserFactory.newInstance()
+            val parser = spf.newSAXParser()
+            val handler = XMLParserHandler()
+            parser.parse(filepath.toFile(), handler)
 
-        val node = DocumentationNode(ref, handler.document.title, handler.document.content!!)
+            title = handler.document.title
+            content = handler.document.content
+        } catch(e: Exception) {
+            title = "Invalid"
+
+            // Create a page with the error
+            content = Content()
+            val p: ParagraphElement = ParagraphElement()
+            p.commands.add(TextCommand("Invalid document!" + e.toString()))
+            content?.blocks?.add(p)
+        }
+
+        val node = DocumentationNode(ref, title!!, content!!)
         node.children = childs
         return node
     }

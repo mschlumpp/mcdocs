@@ -5,12 +5,27 @@ import de.theunknownxy.mcdocs.docs.loader.DocumentationLoader
 public class DocumentationBackend(loader: DocumentationLoader) {
     var cache: DocumentationCache = DocumentationCache(loader)
 
-    var root: DocumentationNode? = null
-    var current_path: DocumentationNode? = null
-    var current_page: DocumentationNode? = null
+    var root: DocumentationNodeRef = DocumentationNodeRef("")
+    var current_path: DocumentationNodeRef = root
+    var current_page: DocumentationNodeRef = root
+
+    public fun navigate(path: DocumentationNodeRef) {
+        val node = cache[path]
+        if(node.children.size() > 0) {
+            current_path = node.path
+        }
+        if(node.content != null) {
+            current_page = path
+        }
+    }
 
     public fun getContent(path: DocumentationNodeRef): Content {
-        return cache[path].content
+        val content = cache[path].content
+        if(content != null) {
+            return content
+        } else {
+            return Content()
+        }
     }
 
     public fun getTitle(path: DocumentationNodeRef) : String {

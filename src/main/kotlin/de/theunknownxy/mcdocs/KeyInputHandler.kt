@@ -9,18 +9,16 @@ import java.io.File
 
 public class KeyInputHandler {
     var backend: DocumentationBackend? = null
-    var gui: DocumentationGUI? = null
 
     fun init() {
-        val loader = FileDocumentationLoader(File(Minecraft.getMinecraft().mcDataDir, "doc"))
+        val loader = FileDocumentationLoader(File(Minecraft.getMinecraft().mcDataDir, "doc").toPath())
         backend = DocumentationBackend(loader)
-        gui = DocumentationGUI(backend!!)
     }
 
     [SubscribeEvent]
     fun onKeyInput(event: InputEvent.KeyInputEvent) {
         if (KeyBindings.openDocBinding.isPressed()) {
-            Minecraft.getMinecraft().displayGuiScreen(gui)
+            Minecraft.getMinecraft().displayGuiScreen(DocumentationGUI(backend!!))
         }
     }
 }
