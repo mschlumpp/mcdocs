@@ -7,7 +7,6 @@ import java.util.ArrayList
 import de.theunknownxy.mcdocs.gui.base.Root
 
 public abstract class MultiContainer(root: Root?) : Container(root) {
-    // TODO: Override width setter so that width == children.max(fixed? -> width)
     public var children: MutableList<Widget> = ArrayList()
 
     override fun draw() = children.forEach { w -> w.draw() }
