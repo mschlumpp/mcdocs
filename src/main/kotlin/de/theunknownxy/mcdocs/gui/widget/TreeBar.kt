@@ -44,8 +44,8 @@ public class TreeBar(root: Root?) : Widget(root) {
                 drawEntry(child, title, 0xDDDDDD)
                 val childchildren = backend.getChildren(child)
                 for (childchild in childchildren) {
-                    val title = backend.getTitle(childchild)
-                    drawEntry(childchild, "  " + title, 0xAAAAAA)
+                    val childtitle = backend.getTitle(childchild)
+                    drawEntry(childchild, "  " + childtitle, 0xAAAAAA)
                 }
             }
         }
