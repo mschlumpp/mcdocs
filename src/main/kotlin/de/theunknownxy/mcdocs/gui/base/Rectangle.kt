@@ -21,4 +21,8 @@ public class Rectangle(var x: Float, var y: Float, var width: Float, var height:
         return x <= point.x && y <= point.y &&
                 point.x <= x2() && point.y <= y2()
     }
+
+    override fun toString(): String {
+        return "[${topleft()}-${bottomright()}]"
+    }
 }

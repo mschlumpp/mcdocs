@@ -12,4 +12,8 @@ public class Point(var x: Float, var y: Float) {
         }
         return false
     }
+
+    override fun toString(): String {
+        return "($x|$y)"
+    }
 }
