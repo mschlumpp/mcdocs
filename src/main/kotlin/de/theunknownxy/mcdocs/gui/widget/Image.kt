@@ -6,7 +6,7 @@ import net.minecraft.util.ResourceLocation
 import net.minecraft.client.Minecraft
 import org.lwjgl.opengl.GL11
 
-class Image(root: Root?) : Widget(root) {
+public class Image(root: Root?) : Widget(root) {
     var tex: ResourceLocation? = null
 
     override fun draw() {
