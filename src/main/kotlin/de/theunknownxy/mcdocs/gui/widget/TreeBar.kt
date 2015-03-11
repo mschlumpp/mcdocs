@@ -7,6 +7,9 @@ import de.theunknownxy.mcdocs.gui.base.Point
 import de.theunknownxy.mcdocs.gui.event.MouseButton
 import de.theunknownxy.mcdocs.gui.base.Rectangle
 import de.theunknownxy.mcdocs.docs.DocumentationNodeRef
+import net.minecraft.client.audio.PositionedSoundRecord
+import net.minecraft.util.ResourceLocation
+import net.minecraft.client.Minecraft
 
 public class TreeBar(root: Root?) : Widget(root) {
     var backend: DocumentationBackend? = null
@@ -54,6 +57,7 @@ public class TreeBar(root: Root?) : Widget(root) {
     override fun onMouseClick(pos: Point, button: MouseButton): Widget? {
         if(hovered_item != null) {
             backend?.navigate(hovered_item!!)
+            Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(ResourceLocation("gui.button.press"), 1.0.toFloat()))
         }
         return null
     }
