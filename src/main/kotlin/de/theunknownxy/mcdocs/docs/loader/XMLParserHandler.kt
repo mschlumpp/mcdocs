@@ -104,7 +104,10 @@ private class XMLStateContent(handler: XMLParserHandler) : XMLState(handler) {
             if (src == null) {
                 throw SAXException("image tag must have a src attribute")
             }
-            handler.xmlstate.push(XMLStateImage(handler, src))
+            val width: Int = attributes.getValue("width").toInt()
+            val height: Int = attributes.getValue("height").toInt()
+
+            handler.xmlstate.push(XMLStateImage(handler, src, width, height))
         } else if (qName.equalsIgnoreCase("p")) {
             handler.xmlstate.push(XMLStateParagraph(handler))
         } else if (qName.equalsIgnoreCase("h1")) {
@@ -133,7 +136,7 @@ private class XMLStateContent(handler: XMLParserHandler) : XMLState(handler) {
 /**
  * Within img tag
  */
-private class XMLStateImage(handler: XMLParserHandler, private val src: String) : XMLState(handler) {
+private class XMLStateImage(handler: XMLParserHandler, private val src: String, private val width: Int, private val height: Int) : XMLState(handler) {
     override fun startElement(uri: String, localName: String, qName: String, attributes: Attributes) {
         throw SAXException("Tag '" + qName + "' is not allowed in a image tag")
     }
@@ -141,7 +144,7 @@ private class XMLStateImage(handler: XMLParserHandler, private val src: String) 
     override fun endElement(uri: String?, localName: String, qName: String) {
         if (qName.equalsIgnoreCase("img")) {
             assert(handler.xmlstate.pop() === this)
-            handler.document.content?.blocks?.add(ImageElement(src))
+            handler.document.content?.blocks?.add(ImageElement(src, width, height))
         } else {
             throw SAXException("Invalid end tag '" + qName + "' in img")
         }

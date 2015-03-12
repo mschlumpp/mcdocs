@@ -16,7 +16,7 @@ open class BlockElement {
 
 }
 
-class ImageElement(var src: String) : BlockElement()
+class ImageElement(var src: String, val width: Int, val height: Int) : BlockElement()
 class HeadingElement(val level: Int, val text: String) : BlockElement()
 
 class ParagraphElement : BlockElement() {
