@@ -2,15 +2,14 @@ package de.theunknownxy.mcdocs.docs
 
 import java.util.ArrayList
 
-open class InlineCommand {
-
-}
-
+open class InlineCommand
 class TextCommand(var text: String) : InlineCommand()
-class BoldCommand(var enable: Boolean) : InlineCommand()
-class ItalicCommand(var enable: Boolean) : InlineCommand()
-class UnderlineCommand(var enable: Boolean) : InlineCommand()
 class LinkCommand(var text: String, var ref: String) : InlineCommand()
+
+open class FormatCommand : InlineCommand()
+class BoldCommand(var enable: Boolean) : FormatCommand()
+class ItalicCommand(var enable: Boolean) : FormatCommand()
+class UnderlineCommand(var enable: Boolean) : FormatCommand()
 
 open class BlockElement {
 
