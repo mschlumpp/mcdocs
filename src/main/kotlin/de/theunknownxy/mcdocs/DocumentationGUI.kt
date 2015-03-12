@@ -12,9 +12,9 @@ public class DocumentationGUI(val backend: DocumentationBackend) : UnscaledWidge
                     hpolicy { fixed(160f) }
                     backend(backend)
                 }
-                vbox {
+                document {
                     hpolicy { expanding(70f) }
-                    image { path("mcdocs:textures/gui/background.png") }
+                    backend(backend)
                 }
                 spacer { hpolicy { expanding(15f) } }
             }

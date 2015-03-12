@@ -8,6 +8,7 @@ import de.theunknownxy.mcdocs.gui.widget.*
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.util.ResourceLocation
 import de.theunknownxy.mcdocs.docs.DocumentationBackend
+import de.theunknownxy.mcdocs.gui.document.DocumentViewer
 
 /****************
  * Base classes *
@@ -109,6 +110,13 @@ class BTreeBar(root: Root?) : BWidget(TreeBar(root)) {
     }
 }
 
+class BDocumentViewer(root: Root?): BWidget(DocumentViewer(root)) {
+    fun backend(backend: DocumentationBackend) {
+        val viewer = widget as DocumentViewer
+        viewer.backend = backend
+    }
+}
+
 class BRoot(gui: GuiScreen) : BSingleContainer(Root(gui)) {
     public fun setRoot() {
         this.widget.root = this.widget as Root
@@ -122,6 +130,7 @@ fun BContainer.vbox(init: BVBox.() -> Unit) = initWidget(BVBox(this.widget.root)
 fun BContainer.hbox(init: BHBox.() -> Unit) = initWidget(BHBox(this.widget.root), init)
 fun BContainer.button(init: BButton.() -> Unit) = initWidget(BButton(this.widget.root), init)
 fun BContainer.treebar(init: BTreeBar.() -> Unit) = initWidget(BTreeBar(this.widget.root), init)
+fun BContainer.document(init: BDocumentViewer.() -> Unit) = initWidget(BDocumentViewer(this.widget.root), init)
 
 fun root(gui: GuiScreen, init: BRoot.() -> Unit): Root {
     val root = BRoot(gui)
