@@ -36,7 +36,7 @@ public class TreeBar(root: Root?) : Widget(root) {
 
             if (backend.current_path != backend.root) {
                 // Draw the up entry
-                drawEntry(backend.current_path.parent(), "...", 0xDDDDDD)
+                drawEntry(backend.current_path.parent(), "..", 0xDDDDDD)
             } else {
                 // Or leave some space
                 dy += 9
