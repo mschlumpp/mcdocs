@@ -7,6 +7,7 @@ import de.theunknownxy.mcdocs.docs.DocumentationBackend
 import de.theunknownxy.mcdocs.docs.Content
 import de.theunknownxy.mcdocs.docs.ImageElement
 import de.theunknownxy.mcdocs.docs.ParagraphElement
+import de.theunknownxy.mcdocs.docs.HeadingElement
 
 public class DocumentViewer(root: Root?) : Widget(root) {
     var backend: DocumentationBackend? = null
@@ -24,6 +25,9 @@ public class DocumentViewer(root: Root?) : Widget(root) {
                     }
                     is ParagraphElement -> {
                         render_blocks.add(render.ParagraphBlock(block))
+                    }
+                    is HeadingElement -> {
+                        render_blocks.add(render.HeadingBlock(block))
                     }
                 }
             }
