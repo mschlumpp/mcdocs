@@ -4,6 +4,7 @@ import net.minecraft.util.ResourceLocation
 import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.Minecraft
 import de.theunknownxy.mcdocs.docs.ImageElement
+import org.lwjgl.opengl.GL11
 
 public class ImageBlock(val elem: ImageElement) : Block() {
     val resloc = ResourceLocation(elem.src)
@@ -29,6 +30,8 @@ public class ImageBlock(val elem: ImageElement) : Block() {
         val f = 0.00390625.toFloat()
         val f1 = 0.00390625.toFloat()
         val tessellator = Tessellator.instance
+
+        GL11.glColor3f(1f, 1f, 1f)
 
         Minecraft.getMinecraft().getTextureManager().bindTexture(resloc)
 
