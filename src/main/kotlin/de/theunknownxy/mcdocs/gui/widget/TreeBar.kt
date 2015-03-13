@@ -36,7 +36,8 @@ public class TreeBar(root: Root?) : Widget(root) {
 
             if (backend.current_path != backend.root) {
                 // Draw the up entry
-                drawEntry(backend.current_path.parent(), "..", 0xDDDDDD)
+                val title = backend.getTitle(backend.current_path)
+                drawEntry(backend.current_path.parent(), ".. §o[$title]", 0xDDDDDD)
             } else {
                 // Or leave some space
                 dy += 9
