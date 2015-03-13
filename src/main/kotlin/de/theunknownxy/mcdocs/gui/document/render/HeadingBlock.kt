@@ -20,7 +20,6 @@ public class HeadingBlock(val heading: HeadingElement) : Block() {
         GL11.glPushMatrix()
         GL11.glTranslatef(x, y, z)
 
-        // TODO: Scale heading depending on level
         GL11.glScalef(heading_scale(), heading_scale(), 1f)
         val mc = Minecraft.getMinecraft().fontRenderer
         mc.drawString("§n" + heading.text, 0, 0, 0xFFFFFF)
