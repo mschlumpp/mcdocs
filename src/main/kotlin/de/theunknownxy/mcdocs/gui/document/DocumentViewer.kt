@@ -14,6 +14,8 @@ public class DocumentViewer(root: Root?) : Widget(root) {
 
     var current_content: Content? = null
     var render_blocks: MutableList<render.Block> = ArrayList()
+    private val padding_top = 9f
+    private val padding_inner = 4f
 
     private fun rebuild_blocks() {
         render_blocks.clear()
@@ -56,10 +58,10 @@ public class DocumentViewer(root: Root?) : Widget(root) {
             }
 
             // Draw content
-            var cury = this.y
+            var cury = this.y + padding_top
             for(block in render_blocks) {
                 block.draw(this.x, cury, 10f)
-                cury += block.height
+                cury += block.height + padding_inner
             }
         }
     }
