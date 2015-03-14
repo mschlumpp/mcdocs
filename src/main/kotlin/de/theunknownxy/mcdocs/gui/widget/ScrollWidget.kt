@@ -83,12 +83,31 @@ public abstract class ScrollWidget(root: Root?) : Widget(root) {
         }
     }
 
+    private var drag_last: Point? = null
     override final fun onMouseClick(pos: Point, button: MouseButton): Widget? {
-        val mp = pos
-        mp.x -= this.x
-        mp.y += position
-        onContentMouseClick(mp, button)
-        return null
+        // Calculate area of scroller
+        val scroller_area = scrollbarArea()
+        val scroller_range = scrollerRangeScreen()
+        scroller_area.y += scroller_range.start
+        scroller_area.height = scroller_range.distance()
+
+        drag_last = null
+        if (scroller_area.contains(pos)) {
+            drag_last = pos
+        } else {
+            val mp = pos
+            mp.x -= this.x
+            mp.y += position
+            onContentMouseClick(mp, button)
+        }
+        return this
+    }
+
+    override fun onMouseClickMove(pos: Point) {
+        if(drag_last != null) {
+            position += (pos.y - drag_last!!.y) / height * getContentHeight()
+            drag_last = pos
+        }
     }
 
     /**
