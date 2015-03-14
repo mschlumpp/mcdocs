@@ -35,6 +35,10 @@ public abstract class ScrollWidget(root: Root?) : Widget(root) {
         public fun distance(): Float = stop - start
     }
 
+    private fun scrollbarArea(): Rectangle {
+        return Rectangle(x + width - CONTROL_BAR_WIDTH, y, CONTROL_BAR_WIDTH.toFloat(), height)
+    }
+
     var position = 0f
 
     /**
@@ -72,10 +76,10 @@ public abstract class ScrollWidget(root: Root?) : Widget(root) {
 
             Minecraft.getMinecraft().getTextureManager().bindTexture(CONTROLS_IMAGE)
 
-            val barleft = (thisrect.x2() - SCROLLBAR_WIDTH).toInt()
-            GuiUtils.drawTexturedModalRect(barleft, (this.y + scrollbar.start + 5).toInt(), 0.toDouble(), 0, 5, CONTROL_BAR_WIDTH, (scrollbar.distance() - 2 * CONTROL_TIP_HEIGHT + 1).toInt(), CONTROL_BAR_WIDTH, CONTROL_MIDDLE_HEIGHT)
-            root!!.gui.drawTexturedModalRect(barleft, (this.y + scrollbar.start).toInt(), 0, 0, CONTROL_BAR_WIDTH, CONTROL_TIP_HEIGHT)
-            root!!.gui.drawTexturedModalRect(barleft, (this.y + scrollbar.stop - 5).toInt(), 0, 6, CONTROL_BAR_WIDTH, CONTROL_TIP_HEIGHT)
+            val barleft = scrollbarArea().x.toInt()
+            GuiUtils.drawTexturedModalRect(barleft, (y + scrollbar.start + CONTROL_TIP_HEIGHT).toInt(), 0.toDouble(), 0, 5, CONTROL_BAR_WIDTH, (scrollbar.distance() - 2 * CONTROL_TIP_HEIGHT + 1).toInt(), CONTROL_BAR_WIDTH, CONTROL_MIDDLE_HEIGHT)
+            root!!.gui.drawTexturedModalRect(barleft, (y + scrollbar.start).toInt(), 0, 0, CONTROL_BAR_WIDTH, CONTROL_TIP_HEIGHT)
+            root!!.gui.drawTexturedModalRect(barleft, (y + scrollbar.stop - CONTROL_TIP_HEIGHT).toInt(), 0, 6, CONTROL_BAR_WIDTH, CONTROL_TIP_HEIGHT)
         }
     }
 
