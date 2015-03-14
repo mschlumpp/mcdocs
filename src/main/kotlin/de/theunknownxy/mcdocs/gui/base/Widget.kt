@@ -5,6 +5,10 @@ import de.theunknownxy.mcdocs.gui.layout.Constraint
 import de.theunknownxy.mcdocs.gui.layout.ExpandingPolicy
 
 public abstract class Widget(public var root: Root?) {
+    /**
+     * Whether on onAreaChanged is called when the dimensions are changed.
+     * Calls onAreaChanged() when it is unsuspended
+     */
     public var suspended: Boolean = false
         set(value) {
             $suspended = value
@@ -30,6 +34,10 @@ public abstract class Widget(public var root: Root?) {
             $height = value
             areaChanged()
         }
+
+    /**
+     * Position and Size of the widget as Rectangle
+     */
     public var rect: Rectangle
         get() = Rectangle(x, y, width, height)
         set(value) {
@@ -39,6 +47,10 @@ public abstract class Widget(public var root: Root?) {
             $height = value.height
             areaChanged()
         }
+
+    /**
+     * Constraints requested by the widget
+     */
     public var constraint: Constraint = Constraint(ExpandingPolicy(1f), ExpandingPolicy(1f))
 
     private fun areaChanged() {
@@ -46,16 +58,34 @@ public abstract class Widget(public var root: Root?) {
     }
 
     public abstract fun draw()
+
+    /**
+     * Called when the mouse is clicked within the area of the widget.
+     * Returns the widget reference if it can be focused.
+     */
     public open fun onMouseClick(pos: Point, button: MouseButton): Widget? = null
+
+    /**
+     * Called when the widget is focused and a key is typed.
+     */
     public open fun onKeyTyped(ch: Char, t: Int) {
     }
 
+    /**
+     * Called once per tick.
+     */
     public open fun onUpdate() {
     }
 
+    /**
+     * Called when the was resized or moved.
+     */
     protected open fun onAreaChanged() {
     }
 
+    /**
+     * Called when the widget is unfocused.
+     */
     protected open fun onUnfocus() {
     }
 }
