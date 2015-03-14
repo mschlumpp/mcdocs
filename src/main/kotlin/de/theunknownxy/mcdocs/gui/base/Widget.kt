@@ -57,6 +57,9 @@ public abstract class Widget(public var root: Root?) {
         if (!suspended) onAreaChanged()
     }
 
+    /**
+     * Called when the widget should be drawed.
+     */
     public abstract fun draw()
 
     /**
