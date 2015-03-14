@@ -20,6 +20,11 @@ public class Root(public val gui: GuiScreen) : SingleContainer(null) {
         return selected_widget
     }
 
+    override fun onMouseClickMove(pos: Point) {
+        // Send the move events to the last clicked widget
+        selected_widget?.onMouseClickMove(pos)
+    }
+
     override fun onKeyTyped(ch: Char, t: Int) {
         selected_widget?.onKeyTyped(ch, t)
     }

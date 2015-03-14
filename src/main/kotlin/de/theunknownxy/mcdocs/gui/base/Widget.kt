@@ -64,9 +64,15 @@ public abstract class Widget(public var root: Root?) {
 
     /**
      * Called when the mouse is clicked within the area of the widget.
-     * Returns the widget reference if it can be focused.
+     * Returns the widget which was clicked
      */
-    public open fun onMouseClick(pos: Point, button: MouseButton): Widget? = null
+    public open fun onMouseClick(pos: Point, button: MouseButton): Widget? = this
+
+    /**
+     * Called when the mouse is moved after it was clicked
+     */
+    public open fun onMouseClickMove(pos: Point) {
+    }
 
     /**
      * Called when the widget is focused and a key is typed.

@@ -15,6 +15,10 @@ public abstract class UnscaledWidgetGui : GuiScreen() {
     private var old_res_height: Int = 0
     private var guiScale = 1f
 
+    override fun mouseClickMove(p_146273_1_: Int, p_146273_2_: Int, p_146273_3_: Int, p_146273_4_: Long) {
+        root?.onMouseClickMove(Point(p_146273_1_.toFloat() * (1 / guiScale), p_146273_2_.toFloat() * (1 / guiScale)))
+    }
+
     override fun mouseClicked(x: Int, y: Int, par3: Int) {
         // Send mouse click event to the GUI framework
         val button = when (par3) {

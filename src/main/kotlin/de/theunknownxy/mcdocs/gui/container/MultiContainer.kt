@@ -11,5 +11,6 @@ public abstract class MultiContainer(root: Root?) : Container(root) {
 
     override fun draw() = children.forEach { w -> w.draw() }
     override fun onMouseClick(pos: Point, button: MouseButton): Widget? = children.firstOrNull { w -> w.rect.contains(pos) }?.onMouseClick(pos, button)
+    override fun onMouseClickMove(pos: Point) = children.firstOrNull { w -> w.rect.contains(pos) }?.onMouseClickMove(pos)
     override fun onUpdate() = children.forEach { w -> w.onUpdate() }
 }
