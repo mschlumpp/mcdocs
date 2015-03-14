@@ -81,7 +81,10 @@ public abstract class ScrollWidget(root: Root?) : Widget(root) {
     }
 
     override final fun onMouseClick(pos: Point, button: MouseButton): Widget? {
-        //TODO: Pass events within content area to subclass
+        val mp = pos
+        mp.x -= this.x
+        mp.y += position
+        onContentMouseClick(mp, button)
         return null
     }
 
