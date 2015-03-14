@@ -15,7 +15,7 @@ public class DocumentViewer(root: Root?) : ScrollWidget(root) {
     class object {
         private val PADDING_TOP = 9f
         private val PADDING_INNER = 4f
-        private val PADDING_RIGHT = 3f
+        private val PADDING_RIGHT = 2f
     }
 
     var backend: DocumentationBackend? = null
@@ -44,7 +44,7 @@ public class DocumentViewer(root: Root?) : ScrollWidget(root) {
 
     private fun update_width() {
         for(block in render_blocks) {
-            block.width = this.width - ScrollWidget.SCROLLBAR_WIDTH
+            block.width = this.width - ScrollWidget.SCROLLER_BAR_WIDTH
             block.width -= PADDING_RIGHT
         }
     }

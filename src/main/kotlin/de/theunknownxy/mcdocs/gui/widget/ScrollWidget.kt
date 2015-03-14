@@ -13,7 +13,6 @@ import net.minecraft.util.ResourceLocation
 
 public abstract class ScrollWidget(root: Root?) : Widget(root) {
     class object {
-        val SCROLLBAR_WIDTH = 3f
         val CONTROLS_IMAGE = ResourceLocation("mcdocs:textures/gui/controls.png")
         val CONTROL_TIP_HEIGHT = 5
         val CONTROL_BAR_WIDTH = 8
@@ -46,7 +45,7 @@ public abstract class ScrollWidget(root: Root?) : Widget(root) {
     }
 
     /**
-     * Returns the position and length of the scrollbar
+     * Returns the position and length of the scrollbar in screen coordinates
      */
     private fun scrollbarRangeScreen(): Range {
         val range = contentRange()
@@ -61,7 +60,7 @@ public abstract class ScrollWidget(root: Root?) : Widget(root) {
         GL11.glTranslatef(x, y - position, 0f)
         val thisrect = rect
         val clientArea = Rectangle(0f, 0f, thisrect.width, thisrect.height)
-        clientArea.width -= SCROLLBAR_WIDTH
+        clientArea.width -= CONTROL_BAR_WIDTH
         drawContent(clientArea)
         GL11.glPopMatrix()
 
