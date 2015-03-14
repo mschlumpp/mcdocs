@@ -13,10 +13,10 @@ import net.minecraft.util.ResourceLocation
 
 public abstract class ScrollWidget(root: Root?) : Widget(root) {
     class object {
-        val CONTROLS_IMAGE = ResourceLocation("mcdocs:textures/gui/controls.png")
-        val CONTROL_TIP_HEIGHT = 5
-        val CONTROL_BAR_WIDTH = 8
-        val CONTROL_MIDDLE_HEIGHT = 1
+        val SCROLLER_IMAGE = ResourceLocation("mcdocs:textures/gui/controls.png")
+        val SCROLLER_TIP_HEIGHT = 5
+        val SCROLLER_BAR_WIDTH = 8
+        val SCROLLER_MIDDLE_HEIGHT = 1
     }
 
     private data class Range(var start: Float, var stop: Float) {
@@ -36,7 +36,7 @@ public abstract class ScrollWidget(root: Root?) : Widget(root) {
     }
 
     private fun scrollbarArea(): Rectangle {
-        return Rectangle(x + width - CONTROL_BAR_WIDTH, y, CONTROL_BAR_WIDTH.toFloat(), height)
+        return Rectangle(x + width - SCROLLER_BAR_WIDTH, y, SCROLLER_BAR_WIDTH.toFloat(), height)
     }
 
     var position = 0f
@@ -51,7 +51,7 @@ public abstract class ScrollWidget(root: Root?) : Widget(root) {
     /**
      * Returns the position and length of the scrollbar in screen coordinates
      */
-    private fun scrollbarRangeScreen(): Range {
+    private fun scrollerRangeScreen(): Range {
         val range = contentRange()
         val startrel = range.start / getContentHeight()
         val stoprel = range.stop / getContentHeight()
@@ -64,22 +64,22 @@ public abstract class ScrollWidget(root: Root?) : Widget(root) {
         GL11.glTranslatef(x, y - position, 0f)
         val thisrect = rect
         val clientArea = Rectangle(0f, 0f, thisrect.width, thisrect.height)
-        clientArea.width -= CONTROL_BAR_WIDTH
+        clientArea.width -= SCROLLER_BAR_WIDTH
         drawContent(clientArea)
         GL11.glPopMatrix()
 
-        // Draw scrollbars
+        // Draw scrollbar
         if (getContentHeight() > height) {
             // Draw the scrollbar if the content is larger than the view
-            val scrollbar = scrollbarRangeScreen()
+            val scrollbar = scrollerRangeScreen()
             GL11.glColor3f(1f, 1f, 1f)
 
-            Minecraft.getMinecraft().getTextureManager().bindTexture(CONTROLS_IMAGE)
+            Minecraft.getMinecraft().getTextureManager().bindTexture(SCROLLER_IMAGE)
 
             val barleft = scrollbarArea().x.toInt()
-            GuiUtils.drawTexturedModalRect(barleft, (y + scrollbar.start + CONTROL_TIP_HEIGHT).toInt(), 0.toDouble(), 0, 5, CONTROL_BAR_WIDTH, (scrollbar.distance() - 2 * CONTROL_TIP_HEIGHT + 1).toInt(), CONTROL_BAR_WIDTH, CONTROL_MIDDLE_HEIGHT)
-            root!!.gui.drawTexturedModalRect(barleft, (y + scrollbar.start).toInt(), 0, 0, CONTROL_BAR_WIDTH, CONTROL_TIP_HEIGHT)
-            root!!.gui.drawTexturedModalRect(barleft, (y + scrollbar.stop - CONTROL_TIP_HEIGHT).toInt(), 0, 6, CONTROL_BAR_WIDTH, CONTROL_TIP_HEIGHT)
+            GuiUtils.drawTexturedModalRect(barleft, (y + scrollbar.start + SCROLLER_TIP_HEIGHT).toInt(), 0.toDouble(), 0, 5, SCROLLER_BAR_WIDTH, (scrollbar.distance() - 2 * SCROLLER_TIP_HEIGHT + 1).toInt(), SCROLLER_BAR_WIDTH, SCROLLER_MIDDLE_HEIGHT)
+            root!!.gui.drawTexturedModalRect(barleft, (y + scrollbar.start).toInt(), 0, 0, SCROLLER_BAR_WIDTH, SCROLLER_TIP_HEIGHT)
+            root!!.gui.drawTexturedModalRect(barleft, (y + scrollbar.stop - SCROLLER_TIP_HEIGHT).toInt(), 0, 6, SCROLLER_BAR_WIDTH, SCROLLER_TIP_HEIGHT)
         }
     }
 
@@ -98,13 +98,13 @@ public abstract class ScrollWidget(root: Root?) : Widget(root) {
         val m = Mouse.getDWheel()
         position -= m * 0.3f
 
-        fixScrollRange()
+        fixScrollerPosition()
     }
 
     /**
-     * Fix the scrollbar between the top and the bottom
+     * Fix the scroller between the top and the bottom
      */
-    private fun fixScrollRange() {
+    private fun fixScrollerPosition() {
         var range = contentRange()
         range.moveStop(Math.min(getContentHeight(), range.stop))
         range.moveStart(Math.max(0f, range.start))
