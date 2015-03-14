@@ -12,7 +12,7 @@ public class MCDocs {
     static CommonProxy proxy;
 
     @Mod.EventHandler
-    void init(FMLInitializationEvent event) {
+    void init(@SuppressWarnings("UnusedParameters") FMLInitializationEvent event) {
         proxy.setupKeys();
     }
 }
