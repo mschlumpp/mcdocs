@@ -16,7 +16,7 @@ public class KeyInputHandler {
     }
 
     [SubscribeEvent]
-    fun onKeyInput(event: InputEvent.KeyInputEvent) {
+    fun onKeyInput([suppress("UNUSED_PARAMETER")] event: InputEvent.KeyInputEvent) {
         if (KeyBindings.openDocBinding.isPressed()) {
             Minecraft.getMinecraft().displayGuiScreen(DocumentationGUI(backend!!))
         }
