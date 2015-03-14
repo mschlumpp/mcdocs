@@ -41,7 +41,7 @@ public abstract class Widget(public var root: Root?) {
         }
     public var constraint: Constraint = Constraint(ExpandingPolicy(1f), ExpandingPolicy(1f))
 
-    protected fun areaChanged() {
+    private fun areaChanged() {
         if (!suspended) onAreaChanged()
     }
 
