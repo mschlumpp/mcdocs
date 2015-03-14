@@ -8,11 +8,14 @@ import de.theunknownxy.mcdocs.docs.Content
 import de.theunknownxy.mcdocs.docs.ImageElement
 import de.theunknownxy.mcdocs.docs.ParagraphElement
 import de.theunknownxy.mcdocs.docs.HeadingElement
+import de.theunknownxy.mcdocs.gui.widget.ScrollWidget
+import de.theunknownxy.mcdocs.gui.base.Rectangle
 
-public class DocumentViewer(root: Root?) : Widget(root) {
+public class DocumentViewer(root: Root?) : ScrollWidget(root) {
     class object {
         private val PADDING_TOP = 9f
         private val PADDING_INNER = 4f
+        private val PADDING_RIGHT = 3f
     }
 
     var backend: DocumentationBackend? = null
@@ -41,7 +44,8 @@ public class DocumentViewer(root: Root?) : Widget(root) {
 
     private fun update_width() {
         for(block in render_blocks) {
-            block.width = this.width
+            block.width = this.width - ScrollWidget.SCROLLBAR_WIDTH
+            block.width -= PADDING_RIGHT
         }
     }
 
@@ -50,7 +54,15 @@ public class DocumentViewer(root: Root?) : Widget(root) {
         update_width()
     }
 
-    override fun draw() {
+    override fun getContentHeight(): Float {
+        var sum = PADDING_TOP
+        for(block in render_blocks) {
+            sum += block.height + PADDING_INNER
+        }
+        return sum
+    }
+
+    override fun drawContent(childArea: Rectangle) {
         if (backend != null) {
             // Update blocks if the page changed
             val new_content = backend!!.getContent(backend!!.current_page)
@@ -61,9 +73,9 @@ public class DocumentViewer(root: Root?) : Widget(root) {
             }
 
             // Draw content
-            var cury = this.y + PADDING_TOP
+            var cury = childArea.y + PADDING_TOP
             for(block in render_blocks) {
-                block.draw(this.x, cury, 10f)
+                block.draw(childArea.x, cury, 10f)
                 cury += block.height + PADDING_INNER
             }
         }
