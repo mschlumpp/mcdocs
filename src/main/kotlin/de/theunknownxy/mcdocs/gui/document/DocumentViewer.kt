@@ -10,12 +10,15 @@ import de.theunknownxy.mcdocs.docs.ParagraphElement
 import de.theunknownxy.mcdocs.docs.HeadingElement
 
 public class DocumentViewer(root: Root?) : Widget(root) {
+    class object {
+        private val PADDING_TOP = 9f
+        private val PADDING_INNER = 4f
+    }
+
     var backend: DocumentationBackend? = null
 
     var current_content: Content? = null
     var render_blocks: MutableList<render.Block> = ArrayList()
-    private val padding_top = 9f
-    private val padding_inner = 4f
 
     private fun rebuild_blocks() {
         render_blocks.clear()
@@ -58,10 +61,10 @@ public class DocumentViewer(root: Root?) : Widget(root) {
             }
 
             // Draw content
-            var cury = this.y + padding_top
+            var cury = this.y + PADDING_TOP
             for(block in render_blocks) {
                 block.draw(this.x, cury, 10f)
-                cury += block.height + padding_inner
+                cury += block.height + PADDING_INNER
             }
         }
     }
