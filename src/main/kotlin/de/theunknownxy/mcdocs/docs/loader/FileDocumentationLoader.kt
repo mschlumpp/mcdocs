@@ -17,7 +17,7 @@ public class FileDocumentationLoader(private val root_path: Path) : Documentatio
 
         // Check whether the path is valid
         if (!filepath.startsWith(root_path)) {
-            throw IllegalArgumentException("The path '" + filepath.toString() + "' is not within '" + root_path.toString())
+            throw IllegalArgumentException("The path '$filepath' is not within '$root_path'")
         }
 
         var childs: MutableList<DocumentationNodeRef> = ArrayList()
@@ -62,7 +62,7 @@ public class FileDocumentationLoader(private val root_path: Path) : Documentatio
             // Create a page with the error
             content = Content()
             val p: ParagraphElement = ParagraphElement()
-            p.commands.add(TextCommand("Invalid document!" + e.toString()))
+            p.commands.add(TextCommand("Invalid document($filepath): $e"))
             content?.blocks?.add(p)
         }
 

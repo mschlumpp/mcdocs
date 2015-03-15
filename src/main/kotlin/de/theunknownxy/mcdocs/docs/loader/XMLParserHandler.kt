@@ -33,12 +33,12 @@ private class XMLStateStart(handler: XMLParserHandler) : XMLState(handler) {
         if (qName.equalsIgnoreCase("document")) {
             handler.xmlstate.push(XMLStateDocument(handler))
         } else {
-            throw SAXException("Invalid tag '" + qName + "' in top level")
+            throw SAXException("Invalid tag '$qName' in top level")
         }
     }
 
     override fun endElement(uri: String?, localName: String, qName: String) {
-        throw SAXException("Invalid end tag '" + qName + "' at top level")
+        throw SAXException("Invalid end tag '$qName' at top level")
     }
 
     override fun characters(str: String) {
@@ -62,7 +62,7 @@ private class XMLStateDocument(handler: XMLParserHandler) : XMLState(handler) {
         if (qName.equalsIgnoreCase("document")) {
             assert(handler.xmlstate.pop() === this)
         } else {
-            throw SAXException("Invalid end tag '" + qName + "' in document tag")
+            throw SAXException("Invalid end tag '$qName' in document tag")
         }
     }
 
@@ -85,7 +85,7 @@ private class XMLStateTitle(handler: XMLParserHandler) : XMLState(handler) {
             assert(handler.xmlstate.pop() === this)
             handler.document.title = title
         } else {
-            throw SAXException("Invalid end tag '" + qName + "' in title tag")
+            throw SAXException("Invalid end tag '$qName' in title tag")
         }
     }
 
@@ -117,7 +117,7 @@ private class XMLStateContent(handler: XMLParserHandler) : XMLState(handler) {
         } else if (qName.equalsIgnoreCase("h3")) {
             handler.xmlstate.push(XMLStateHeading(handler, 3))
         } else {
-            throw SAXException("Invalid tag '" + qName + "' in content tag")
+            throw SAXException("Invalid tag '$qName' in content tag")
         }
     }
 
@@ -125,7 +125,7 @@ private class XMLStateContent(handler: XMLParserHandler) : XMLState(handler) {
         if (qName.equalsIgnoreCase("content")) {
             assert(handler.xmlstate.pop() === this)
         } else {
-            throw SAXException("Invalid end tag '" + qName + "' in content")
+            throw SAXException("Invalid end tag '$qName' in content")
         }
     }
 
@@ -138,7 +138,7 @@ private class XMLStateContent(handler: XMLParserHandler) : XMLState(handler) {
  */
 private class XMLStateImage(handler: XMLParserHandler, private val src: String, private val width: Int, private val height: Int) : XMLState(handler) {
     override fun startElement(uri: String, localName: String, qName: String, attributes: Attributes) {
-        throw SAXException("Tag '" + qName + "' is not allowed in a image tag")
+        throw SAXException("Tag '$qName' is not allowed in a image tag")
     }
 
     override fun endElement(uri: String?, localName: String, qName: String) {
@@ -146,7 +146,7 @@ private class XMLStateImage(handler: XMLParserHandler, private val src: String, 
             assert(handler.xmlstate.pop() === this)
             handler.document.content?.blocks?.add(ImageElement(src, width, height))
         } else {
-            throw SAXException("Invalid end tag '" + qName + "' in img")
+            throw SAXException("Invalid end tag '$qName' in img")
         }
     }
 
@@ -236,7 +236,7 @@ private class XMLStateParagraph(handler: XMLParserHandler) : XMLState(handler) {
         } else if (qName.equalsIgnoreCase("u")) {
             popEmitFormat()
         } else {
-            throw SAXException("Invalid end tag '" + qName + "' in paragraph")
+            throw SAXException("Invalid end tag '$qName' in paragraph")
         }
     }
 
@@ -249,15 +249,15 @@ private class XMLStateHeading(handler: XMLParserHandler, val level: Int) : XMLSt
     var text = ""
 
     override fun startElement(uri: String, localName: String, qName: String, attributes: Attributes) {
-        throw SAXException("Invalid tag '" + qName + "' in heading")
+        throw SAXException("Invalid tag '$qName' in heading")
     }
 
     override fun endElement(uri: String?, localName: String, qName: String) {
-        if (qName.equalsIgnoreCase("h" + level.toString())) {
+        if (qName.equalsIgnoreCase("h$level")) {
             assert(handler.xmlstate.pop() === this)
             handler.document.content?.blocks?.add(HeadingElement(level, text))
         } else {
-            throw SAXException("Invalid end tag '" + qName + " in heading")
+            throw SAXException("Invalid end tag '$qName' in heading")
         }
     }
 
@@ -270,7 +270,7 @@ private class XMLStateLink(handler: XMLParserHandler, val p: ParagraphElement, v
     var text = ""
 
     override fun startElement(uri: String, localName: String, qName: String, attributes: Attributes) {
-        throw SAXException("Invalid tag '" + qName + "' in link")
+        throw SAXException("Invalid tag '$qName' in link")
     }
 
     override fun endElement(uri: String?, localName: String, qName: String) {
@@ -278,7 +278,7 @@ private class XMLStateLink(handler: XMLParserHandler, val p: ParagraphElement, v
             assert(handler.xmlstate.pop() === this)
             p.commands.add(LinkCommand(text, ref))
         } else {
-            throw SAXException("Invalid end tag '" + qName + " in link")
+            throw SAXException("Invalid end tag '$qName' in link")
         }
     }
 
