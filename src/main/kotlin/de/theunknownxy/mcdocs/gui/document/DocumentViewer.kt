@@ -44,8 +44,7 @@ public class DocumentViewer(root: Root?) : ScrollWidget(root) {
 
     private fun update_width() {
         for(block in render_blocks) {
-            block.width = this.width - ScrollWidget.SCROLLER_BAR_WIDTH
-            block.width -= PADDING_RIGHT
+            block.width = contentWidth() - PADDING_RIGHT
         }
     }
 

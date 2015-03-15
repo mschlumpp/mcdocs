@@ -58,6 +58,10 @@ public abstract class ScrollWidget(root: Root?) : Widget(root) {
         return Range(startrel * height, stoprel * height)
     }
 
+    public fun contentWidth(): Float {
+        return width - SCROLLER_BAR_WIDTH
+    }
+
     override final fun draw() {
         // Draw content
         GL11.glPushMatrix()
