@@ -33,9 +33,9 @@ object GuiUtils {
         drawTexturedModalRect((box.x2() - borderright).toInt(), (box.y2() - borderbottom).toInt(), z, (texbox.x2() - borderright).toInt(), (texbox.y2() - borderbottom).toInt(), borderright, borderbottom)
 
         // Draw top and bottom border
-        var xhorizontal = box.x + borderleft
-        val x2horizontal = box.x2() - borderright
-        val stephorizontal = (texbox.width - borderleft - borderright).toInt()
+        var xhorizontal: Int = (box.x + borderleft).toInt()
+        val x2horizontal: Int = (box.x2() - borderright).toInt()
+        val stephorizontal: Int = (texbox.width - borderleft - borderright).toInt()
         while (xhorizontal < x2horizontal) {
             val drawwidth = Math.min(stephorizontal, (x2horizontal - xhorizontal).toInt())
             drawTexturedModalRect(xhorizontal.toInt(), box.y.toInt(), z, (texbox.x + borderright).toInt(), texbox.y.toInt(), drawwidth, bordertop)
@@ -44,27 +44,27 @@ object GuiUtils {
         }
 
         // Draw left and right border
-        var yleft = box.y + bordertop
-        val y2left = box.y2() - borderbottom
-        val stepleft = (texbox.height - bordertop - borderbottom).toInt()
-        while(yleft < y2left) {
+        var yleft: Int = (box.y + bordertop).toInt()
+        val y2left: Int = (box.y2() - borderbottom).toInt()
+        val stepleft: Int = (texbox.height - bordertop - borderbottom).toInt()
+        while (yleft < y2left) {
             val drawheight = Math.min(stepleft, (y2left - yleft).toInt())
             drawTexturedModalRect(box.x.toInt(), yleft.toInt(), z, texbox.x.toInt(), (texbox.y + bordertop).toInt(), borderleft, drawheight)
             drawTexturedModalRect((box.x2() - borderleft).toInt(), yleft.toInt(), z, (texbox.x2() - borderright).toInt(), (texbox.x + bordertop).toInt(), borderright, drawheight)
             yleft += stepleft
         }
         // Draw center
-        val y2center = box.y2() - borderbottom
-        val stepycenter = (texbox.height - bordertop - borderbottom).toInt()
-        val x2center = box.x2() - borderright
-        val stepxcenter = (texbox.width - borderleft - borderright).toInt()
+        val y2center: Int = (box.y2() - borderbottom).toInt()
+        val stepycenter: Int = (texbox.height - bordertop - borderbottom).toInt()
+        val x2center: Int = (box.x2() - borderright).toInt()
+        val stepxcenter: Int = (texbox.width - borderleft - borderright).toInt()
 
-        var ycenter = box.y + bordertop
-        while(ycenter < y2center) {
-            var xcenter = box.x + borderleft
-            val drawheight = Math.min(stepycenter, (y2center - ycenter).toInt())
-            while(xcenter < x2center) {
-                val drawwidth = Math.min(stepxcenter, (x2center - xcenter).toInt())
+        var ycenter: Int = (box.y + bordertop).toInt()
+        while (ycenter < y2center) {
+            var xcenter = (box.x + borderleft).toInt()
+            val drawheight = Math.min(stepycenter, y2center - ycenter)
+            while (xcenter < x2center) {
+                val drawwidth = Math.min(stepxcenter, x2center - xcenter)
                 drawTexturedModalRect(xcenter.toInt(), ycenter.toInt(), z, (texbox.x + borderleft).toInt(), (texbox.y + bordertop).toInt(), drawwidth, drawheight)
                 xcenter += stepxcenter
             }
