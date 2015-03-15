@@ -15,8 +15,9 @@ public abstract class ScrollWidget(root: Root?) : Widget(root) {
     class object {
         val SCROLLER_IMAGE = ResourceLocation("mcdocs:textures/gui/controls.png")
         val SCROLLER_TIP_HEIGHT = 5
-        val SCROLLER_BAR_WIDTH = 8
+        val SCROLLER_BAR_WIDTH = 9
         val SCROLLER_MIDDLE_HEIGHT = 1
+        val SCROLLBUTTON_HEIGHT = 8
     }
 
     private data class Range(var start: Float, var stop: Float) {
@@ -61,10 +62,11 @@ public abstract class ScrollWidget(root: Root?) : Widget(root) {
      * Returns the position and length of the scrollbar in screen coordinates
      */
     private fun scrollerRangeScreen(): Range {
+        val scrollbararea = scrollbarArea()
         val range = contentRange()
         val startrel = range.start / getContentHeight()
         val stoprel = range.stop / getContentHeight()
-        return Range(startrel * height, stoprel * height)
+        return Range(startrel * scrollbararea.height + SCROLLBUTTON_HEIGHT, stoprel * scrollbararea.height - SCROLLBUTTON_HEIGHT)
     }
 
     public fun contentWidth(): Float {
@@ -90,22 +92,33 @@ public abstract class ScrollWidget(root: Root?) : Widget(root) {
             Minecraft.getMinecraft().getTextureManager().bindTexture(SCROLLER_IMAGE)
 
             val barleft = scrollbarArea().x.toInt()
+            // Draw scroller
             GuiUtils.drawTexturedModalRect(barleft, (y + scrollbar.start + SCROLLER_TIP_HEIGHT).toInt(), 0.toDouble(), 0, 5, SCROLLER_BAR_WIDTH, (scrollbar.distance() - 2 * SCROLLER_TIP_HEIGHT + 1).toInt(), SCROLLER_BAR_WIDTH, SCROLLER_MIDDLE_HEIGHT)
             root!!.gui.drawTexturedModalRect(barleft, (y + scrollbar.start).toInt(), 0, 0, SCROLLER_BAR_WIDTH, SCROLLER_TIP_HEIGHT)
             root!!.gui.drawTexturedModalRect(barleft, (y + scrollbar.stop - SCROLLER_TIP_HEIGHT).toInt(), 0, 6, SCROLLER_BAR_WIDTH, SCROLLER_TIP_HEIGHT)
+            // Draw Buttons
+            root!!.gui.drawTexturedModalRect(barleft, y.toInt(), 0, 11, SCROLLER_BAR_WIDTH, SCROLLBUTTON_HEIGHT)
+            root!!.gui.drawTexturedModalRect(barleft, (y + this.height - SCROLLBUTTON_HEIGHT).toInt(), 0, 19, SCROLLER_BAR_WIDTH, SCROLLBUTTON_HEIGHT)
         }
     }
 
     private var drag_last: Point? = null
     override final fun onMouseClick(pos: Point, button: MouseButton): Widget? {
         // Calculate area of scroller
+        val scrollbar_area = scrollbarArea()
         val scroller_area = scrollbarArea()
         val scroller_range = scrollerRangeScreen()
         scroller_area.y += scroller_range.start
         scroller_area.height = scroller_range.distance()
 
         drag_last = null
-        if (scroller_area.contains(pos)) {
+        if (Rectangle(scrollbar_area.x, scrollbar_area.y, scrollbar_area.width, SCROLLBUTTON_HEIGHT.toFloat()).contains(pos)) {
+            // Up button
+            position -= 50f
+        } else if (Rectangle(scrollbar_area.x, scrollbar_area.y2() - SCROLLBUTTON_HEIGHT, scrollbar_area.width, SCROLLBUTTON_HEIGHT.toFloat()).contains(pos)) {
+            // Down button
+            position += 50f
+        } else if (scroller_area.contains(pos)) {
             drag_last = pos
         } else {
             val mp = pos
@@ -117,7 +130,7 @@ public abstract class ScrollWidget(root: Root?) : Widget(root) {
     }
 
     override fun onMouseClickMove(pos: Point) {
-        if(drag_last != null) {
+        if (drag_last != null) {
             position += (pos.y - drag_last!!.y) / height * getContentHeight()
             drag_last = pos
         }
