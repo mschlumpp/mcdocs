@@ -7,6 +7,7 @@ import de.theunknownxy.mcdocs.gui.event.MouseButton
 import de.theunknownxy.mcdocs.gui.base.Point
 import de.theunknownxy.mcdocs.gui.base.Rectangle
 import org.lwjgl.opengl.GL11
+import org.lwjgl.input.Mouse
 
 public abstract class UnscaledWidgetGui : GuiScreen() {
     protected var root: Root? = null
@@ -38,6 +39,12 @@ public abstract class UnscaledWidgetGui : GuiScreen() {
     }
 
     override fun updateScreen() {
+        // Check for the mouse wheel
+        val v = Mouse.getDWheel()
+        if(v != 0) {
+            root?.onMouseScroll(root!!.mouse_pos, v)
+        }
+
         root?.onUpdate()
     }
 

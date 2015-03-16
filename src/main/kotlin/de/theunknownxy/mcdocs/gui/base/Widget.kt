@@ -69,6 +69,12 @@ public abstract class Widget(public var root: Root?) {
     public open fun onMouseClick(pos: Point, button: MouseButton): Widget? = this
 
     /**
+     * Called when the mouse wheel is scrolled
+     */
+    public open fun onMouseScroll(pos: Point, wheel: Int) {
+    }
+
+    /**
      * Called when the mouse is moved after it was clicked
      */
     public open fun onMouseClickMove(pos: Point) {

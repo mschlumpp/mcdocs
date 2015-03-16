@@ -16,6 +16,13 @@ public abstract class SingleContainer(root: Root?) : Container(root) {
         return null
     }
 
+    override fun onMouseScroll(pos: Point, wheel: Int) {
+        val c = child
+        if(c != null && c.rect.contains(pos)) {
+            c.onMouseScroll(pos, wheel)
+        }
+    }
+
     override fun onMouseClickMove(pos: Point) {
         val c = child
         if(c != null && c.rect.contains(pos)) {

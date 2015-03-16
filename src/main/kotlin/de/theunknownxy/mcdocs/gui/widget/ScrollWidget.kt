@@ -136,6 +136,7 @@ public abstract class ScrollWidget(root: Root?) : Widget(root) {
             mp.y += position
             onContentMouseClick(mp, button)
         }
+        fixScrollerPosition()
         return this
     }
 
@@ -143,15 +144,12 @@ public abstract class ScrollWidget(root: Root?) : Widget(root) {
         if (drag_last != null) {
             position += (pos.y - drag_last!!.y) / height * getContentHeight()
             drag_last = pos
+            fixScrollerPosition()
         }
     }
 
-    /**
-     * Read the Mouse Wheel and scroll the content
-     */
-    override fun onUpdate() {
-        val m = Mouse.getDWheel()
-        position -= m * 0.3f
+    override fun onMouseScroll(pos: Point, wheel: Int) {
+        position -= wheel * 0.3f
 
         fixScrollerPosition()
     }
