@@ -12,6 +12,13 @@ import net.minecraft.util.ResourceLocation
 import net.minecraft.client.Minecraft
 
 public class TreeBar(root: Root?) : Widget(root) {
+    class object {
+        val COLOR_HIGHLIGHT = 0xFFFFFF
+        val COLOR_ACTIVE = 0x99FF99
+        val COLOR_TOPLEVEL = 0xDDDDDD
+        val COLOR_SECONDLEVEL = 0xAAAAAA
+    }
+
     var backend: DocumentationBackend? = null
     var hovered_item: DocumentationNodeRef? = null
 
@@ -23,29 +30,29 @@ public class TreeBar(root: Root?) : Widget(root) {
 
             fun drawEntry(node: DocumentationNodeRef, text: String, color: Int) {
                 var ecol = color
-                if (Rectangle(this.x, this.y + dy, this.width, 9f - 1f).contains(root!!.mouse_pos)) {
+                if (Rectangle(this.x, this.y + dy, this.width, fontrenderer.FONT_HEIGHT - 1f).contains(root!!.mouse_pos)) {
                     // Highlight item on hover and store it
-                    ecol = 0xFFFFFF
+                    ecol = COLOR_HIGHLIGHT
                     hovered_item = node
                 } else if(node == backend.current_page) {
-                    ecol = 0x99FF99
+                    ecol = COLOR_ACTIVE
                 }
                 fontrenderer.drawString(text, this.x.toInt(), (this.y + dy).toInt(), ecol)
-                dy += 9
+                dy += fontrenderer.FONT_HEIGHT
             }
 
             if (backend.current_path != backend.root) {
                 // Draw the up entry
                 val title = backend.getTitle(backend.current_path)
-                drawEntry(backend.current_path.parent(), ".. §o[$title]", 0xDDDDDD)
+                drawEntry(backend.current_path.parent(), ".. §o[$title]", COLOR_TOPLEVEL)
             } else {
                 // Or leave some space
-                dy += 9
+                dy += fontrenderer.FONT_HEIGHT
             }
             val children = backend.getChildren(backend.current_path)
             for (child in children) {
                 val title = backend.getTitle(child)
-                drawEntry(child, title, 0xDDDDDD)
+                drawEntry(child, title, COLOR_TOPLEVEL)
                 val childchildren = backend.getChildren(child)
                 for (childchild in childchildren) {
                     val childtitle = backend.getTitle(childchild)
@@ -54,16 +61,16 @@ public class TreeBar(root: Root?) : Widget(root) {
                     if(childchildchildren.size() > 0) {
                         prefix = " +"
                     }
-                    drawEntry(childchild, prefix + childtitle, 0xAAAAAA)
+                    drawEntry(childchild, prefix + childtitle, COLOR_SECONDLEVEL)
                 }
             }
         }
     }
 
     override fun onMouseClick(pos: Point, button: MouseButton): Widget? {
-        if(hovered_item != null) {
+        if(hovered_item != null && button == MouseButton.LEFT) {
             backend?.navigate(hovered_item!!)
-            Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(ResourceLocation("gui.button.press"), 1.0.toFloat()))
+            Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(ResourceLocation("gui.button.press"), 1.toFloat()))
         }
         return null
     }
