@@ -134,6 +134,11 @@ public class ScrollWidget(root: Root?, val child: ScrollChild) : Widget(root) {
         return this
     }
 
+    override fun onUpdate() {
+        super.onUpdate()
+        fixScrollerPosition()
+    }
+
     override fun onMouseClickMove(pos: Point) {
         val drag_last = drag_last
         if (drag_last != null) {
