@@ -73,9 +73,9 @@ public class TreeBar() : ScrollChild() {
     }
 
     override fun draw() {
-        val fontrenderer = Minecraft.getMinecraft().fontRenderer
-        val backend = backend!!
-        if (fontrenderer != null) {
+        val fontrenderer = Minecraft?.getMinecraft()?.fontRenderer
+        val backend = backend
+        if (fontrenderer != null && backend != null) {
             if (dirty) rebuild()
 
             var dy = PADDING_TOP
