@@ -103,9 +103,9 @@ class BButton(root: Root?) : BWidget(Button(root)) {
     }
 }
 
-class BTreeBar(root: Root?) : BWidget(TreeBar(root)) {
+class BTreeBar(root: Root?) : BWidget(ScrollWidget(root, TreeBar())) {
     fun backend(backend: DocumentationBackend) {
-        val bar = widget as TreeBar
+        val bar = (widget as ScrollWidget).child as TreeBar
         bar.backend = backend
     }
 }

@@ -1,18 +1,16 @@
 package de.theunknownxy.mcdocs.gui.widget
 
-import de.theunknownxy.mcdocs.gui.base.Widget
-import de.theunknownxy.mcdocs.gui.base.Root
 import de.theunknownxy.mcdocs.docs.DocumentationBackend
 import de.theunknownxy.mcdocs.gui.base.Point
 import de.theunknownxy.mcdocs.gui.event.MouseButton
 import de.theunknownxy.mcdocs.gui.base.Rectangle
 import de.theunknownxy.mcdocs.docs.DocumentationNodeRef
 import net.minecraft.client.audio.PositionedSoundRecord
-import net.minecraft.util.ResourceLocation
 import net.minecraft.client.Minecraft
+import net.minecraft.util.ResourceLocation
 import java.util.ArrayList
 
-public class TreeBar(root: Root?) : Widget(root) {
+public class TreeBar() : ScrollChild() {
     class object {
         val COLOR_HIGHLIGHT = 0xFFFFFF
         val COLOR_ACTIVE = 0x99FF99
@@ -75,7 +73,7 @@ public class TreeBar(root: Root?) : Widget(root) {
     }
 
     override fun draw() {
-        val fontrenderer = root?.gui?.mc?.fontRenderer
+        val fontrenderer = Minecraft.getMinecraft().fontRenderer
         val backend = backend!!
         if (fontrenderer != null) {
             if (dirty) rebuild()
@@ -91,24 +89,27 @@ public class TreeBar(root: Root?) : Widget(root) {
                 }
 
                 // Override color if the node is active or highlighted
-                if (Rectangle(this.x, this.y + dy, this.width, fontrenderer.FONT_HEIGHT - 1f).contains(root!!.mouse_pos)) {
+                if (Rectangle(0f, dy.toFloat(), this.width, fontrenderer.FONT_HEIGHT - 1f).contains(mouse_pos)) {
                     ecol = COLOR_HIGHLIGHT
                 } else if (ref == backend.current_page) {
                     ecol = COLOR_ACTIVE
                 }
-                fontrenderer.drawString(text, this.x.toInt(), (this.y + dy).toInt(), ecol)
+                fontrenderer.drawString(text, 0, dy.toInt(), ecol)
                 dy += fontrenderer.FONT_HEIGHT
             }
         }
     }
 
-    override fun onMouseClick(pos: Point, button: MouseButton): Widget? {
-        val index = ((pos.y - y - PADDING_TOP) / Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT.toFloat()).toInt()
+    override fun onMouseClick(pos: Point, button: MouseButton) {
+        val index = ((pos.y - PADDING_TOP) / Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT.toFloat()).toInt()
         if (index < entries.size()) {
             backend?.navigate(entries[index].ref)
             dirty = true
             Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(ResourceLocation("gui.button.press"), 1.toFloat()))
         }
-        return null
+    }
+
+    override fun getHeight(): Float {
+        return (entries.size() * Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT + PADDING_TOP).toFloat()
     }
 }
