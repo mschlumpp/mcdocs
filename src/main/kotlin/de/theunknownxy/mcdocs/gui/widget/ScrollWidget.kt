@@ -97,6 +97,12 @@ public class ScrollWidget(root: Root?, val child: ScrollChild) : Widget(root) {
             // Draw the scrollbar if the content is larger than the view
             drawScrollbar()
         }
+
+        // Update mouse position in child
+        val root = root
+        if(root != null) {
+            child.mouse_pos = Point(root.mouse_pos.x - x, root.mouse_pos.y - y + position)
+        }
     }
 
     private fun drawScrollbar() {

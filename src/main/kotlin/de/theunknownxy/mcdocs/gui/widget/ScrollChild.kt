@@ -4,7 +4,7 @@ import de.theunknownxy.mcdocs.gui.base.Point
 import de.theunknownxy.mcdocs.gui.event.MouseButton
 
 public abstract class ScrollChild {
-    protected var mouse_pos: Point = Point(0f, 0f)
+    public var mouse_pos: Point = Point(0f, 0f)
 
     public var width: Float = 0f
         set(v: Float) {
