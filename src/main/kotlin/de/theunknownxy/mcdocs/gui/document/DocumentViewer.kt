@@ -8,15 +8,13 @@ import de.theunknownxy.mcdocs.docs.ParagraphElement
 import de.theunknownxy.mcdocs.docs.HeadingElement
 import de.theunknownxy.mcdocs.docs.BlockElement
 import de.theunknownxy.mcdocs.docs.TextCommand
-import de.theunknownxy.mcdocs.gui.base.Rectangle
-import de.theunknownxy.mcdocs.gui.base.Root
-import de.theunknownxy.mcdocs.gui.widget.ScrollWidget
 import de.theunknownxy.mcdocs.gui.document.render.Block
 import de.theunknownxy.mcdocs.gui.document.render.ImageBlock
 import de.theunknownxy.mcdocs.gui.document.render.ParagraphBlock
 import de.theunknownxy.mcdocs.gui.document.render.HeadingBlock
+import de.theunknownxy.mcdocs.gui.widget.ScrollChild
 
-public class DocumentViewer(root: Root?) : ScrollWidget(root) {
+public class DocumentViewer() : ScrollChild() {
     class object {
         private val PADDING_TOP = 9f
         private val PADDING_INNER = 4f
@@ -66,17 +64,17 @@ public class DocumentViewer(root: Root?) : ScrollWidget(root) {
         var lastposition = PADDING_TOP
         for (pair in render_blocks) {
             pair.position = lastposition
-            pair.block.width = contentWidth() - PADDING_RIGHT
+            pair.block.width = width - PADDING_RIGHT
             lastposition += pair.block.height + PADDING_INNER
         }
     }
 
-    override fun onAreaChanged() {
-        super.onAreaChanged()
+    override fun onWidthChanged() {
+        super.onWidthChanged()
         update_width()
     }
 
-    override fun getContentHeight(): Float {
+    override fun getHeight(): Float {
         val last = render_blocks.lastOrNull()
         if (last != null) {
             return last.position + last.block.height
@@ -85,7 +83,7 @@ public class DocumentViewer(root: Root?) : ScrollWidget(root) {
         }
     }
 
-    override fun drawContent(childArea: Rectangle) {
+    override fun draw() {
         if (backend != null) {
             // Update blocks if the page changed
             val new_content = backend!!.getContent(backend!!.current_page)
@@ -97,7 +95,7 @@ public class DocumentViewer(root: Root?) : ScrollWidget(root) {
 
             // Draw content
             for ((position, block) in render_blocks) {
-                block.draw(childArea.x, position, 10f)
+                block.draw(0f, position, 10f)
             }
         }
     }

@@ -110,9 +110,9 @@ class BTreeBar(root: Root?) : BWidget(TreeBar(root)) {
     }
 }
 
-class BDocumentViewer(root: Root?): BWidget(DocumentViewer(root)) {
+class BDocumentViewer(root: Root?) : BWidget(ScrollWidget(root, DocumentViewer())) {
     fun backend(backend: DocumentationBackend) {
-        val viewer = widget as DocumentViewer
+        val viewer = (widget as ScrollWidget).child as DocumentViewer
         viewer.backend = backend
     }
 }
