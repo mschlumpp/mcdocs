@@ -5,6 +5,7 @@ import de.theunknownxy.mcdocs.gui.base.Root
 import de.theunknownxy.mcdocs.gui.base.Point
 import de.theunknownxy.mcdocs.gui.event.MouseButton
 import de.theunknownxy.mcdocs.gui.base.Rectangle
+import de.theunknownxy.mcdocs.gui.base.Range
 import de.theunknownxy.mcdocs.utils.GuiUtils
 import org.lwjgl.input.Mouse
 import org.lwjgl.opengl.GL11
@@ -28,30 +29,6 @@ public abstract class ScrollWidget(root: Root?) : Widget(root) {
                 SCROLLER_TIP_HEIGHT, 0, SCROLLER_TIP_HEIGHT, 0)
     }
 
-    private data class Range(var start: Float, var stop: Float) {
-        /**
-         * Set the stop position and move the start position accordingly
-         */
-        public fun moveStop(pos: Float) {
-            val d = pos - stop
-            stop = pos
-            start += d
-        }
-
-        /**
-         * Set the start position and move the stop position accordingly
-         */
-        public fun moveStart(pos: Float) {
-            val d = pos - start
-            start = pos
-            stop += d
-        }
-
-        /**
-         * Return the distance between the start and the end point
-         */
-        public fun distance(): Float = stop - start
-    }
 
     private fun scrollbarArea(): Rectangle {
         return Rectangle(x + width - SCROLLER_BAR_WIDTH, y, SCROLLER_BAR_WIDTH.toFloat(), height)
