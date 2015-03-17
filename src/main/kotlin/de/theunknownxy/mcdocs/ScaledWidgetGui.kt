@@ -9,15 +9,17 @@ import de.theunknownxy.mcdocs.gui.base.Rectangle
 import org.lwjgl.opengl.GL11
 import org.lwjgl.input.Mouse
 
-public abstract class UnscaledWidgetGui : GuiScreen() {
+public abstract class ScaledWidgetGui : GuiScreen() {
     protected var root: Root? = null
 
     private var old_res_width: Int = 0
     private var old_res_height: Int = 0
-    private var guiScale = 1f
+
+    protected var guiScale: Float = 2f
+    private var guiFactor = 1f
 
     override fun mouseClickMove(p_146273_1_: Int, p_146273_2_: Int, p_146273_3_: Int, p_146273_4_: Long) {
-        root?.onMouseClickMove(Point(p_146273_1_.toFloat() * (1 / guiScale), p_146273_2_.toFloat() * (1 / guiScale)))
+        root?.onMouseClickMove(Point(p_146273_1_.toFloat() * (1 / guiFactor), p_146273_2_.toFloat() * (1 / guiFactor)))
     }
 
     override fun mouseClicked(x: Int, y: Int, par3: Int) {
@@ -28,7 +30,7 @@ public abstract class UnscaledWidgetGui : GuiScreen() {
             2 -> MouseButton.MIDDLE
             else -> MouseButton.MIDDLE
         }
-        root?.onMouseClick(Point(x.toFloat() * (1 / guiScale), y.toFloat() * (1 / guiScale)), button)
+        root?.onMouseClick(Point(x.toFloat() * (1 / guiFactor), y.toFloat() * (1 / guiFactor)), button)
     }
 
     override fun keyTyped(p_73869_1_: Char, p_73869_2_: Int) {
@@ -55,19 +57,19 @@ public abstract class UnscaledWidgetGui : GuiScreen() {
             // Recalculate scale
             old_res_width = mc.displayWidth
             old_res_height = mc.displayHeight
-            guiScale = ScaledResolution(mc, old_res_width, old_res_height).getScaleFactor().toFloat()
-            guiScale = 1 / guiScale
-            guiScale *= 2f
+            guiFactor = ScaledResolution(mc, old_res_width, old_res_height).getScaleFactor().toFloat()
+            guiFactor = 1 / guiFactor
+            guiFactor *= guiScale
             // Set root dimensions
-            root?.rect = Rectangle(0f, 0f, this.width.toFloat() * 1 / guiScale, this.height.toFloat() * 1 / guiScale)
+            root?.rect = Rectangle(0f, 0f, this.width.toFloat() * 1 / guiFactor, this.height.toFloat() * 1 / guiFactor)
         }
 
         // Update Root
-        root?.mouse_pos = Point(par1.toFloat() * (1 / guiScale), par2.toFloat() * (1 / guiScale))
+        root?.mouse_pos = Point(par1.toFloat() * (1 / guiFactor), par2.toFloat() * (1 / guiFactor))
 
         // Draw the "unscaled" gui
         GL11.glPushMatrix()
-        GL11.glScalef(guiScale, guiScale, 1f)
+        GL11.glScalef(guiFactor, guiFactor, 1f)
         root?.draw()
         GL11.glPopMatrix()
     }

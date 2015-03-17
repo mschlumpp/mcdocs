@@ -3,7 +3,7 @@ package de.theunknownxy.mcdocs
 import de.theunknownxy.mcdocs.gui.utils.*
 import de.theunknownxy.mcdocs.docs.DocumentationBackend
 
-public class DocumentationGUI(val backend: DocumentationBackend) : UnscaledWidgetGui() {
+public class DocumentationGUI(val backend: DocumentationBackend) : ScaledWidgetGui() {
     override fun initGui() {
         root = root(this, {
             hbox {
