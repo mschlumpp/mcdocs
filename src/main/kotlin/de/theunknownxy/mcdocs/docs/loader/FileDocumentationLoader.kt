@@ -1,13 +1,9 @@
 package de.theunknownxy.mcdocs.docs.loader
 
-import de.theunknownxy.mcdocs.docs.DocumentationNodeRef
-import de.theunknownxy.mcdocs.docs.DocumentationNode
-import javax.xml.parsers.SAXParserFactory
-import java.util.ArrayList
-import de.theunknownxy.mcdocs.docs.Content
-import de.theunknownxy.mcdocs.docs.ParagraphElement
-import de.theunknownxy.mcdocs.docs.TextCommand
+import de.theunknownxy.mcdocs.docs.*
 import java.nio.file.Path
+import java.util.ArrayList
+import javax.xml.parsers.SAXParserFactory
 
 public class FileDocumentationLoader(private val root_path: Path) : DocumentationLoader {
     private val extension = ".xml"
@@ -68,6 +64,7 @@ public class FileDocumentationLoader(private val root_path: Path) : Documentatio
 
         val node = DocumentationNode(ref, title!!, content)
         node.children = childs
+        node.parent = ref.parent()
         return node
     }
 }
