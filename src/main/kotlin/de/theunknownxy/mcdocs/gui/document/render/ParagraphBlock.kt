@@ -1,13 +1,8 @@
 package de.theunknownxy.mcdocs.gui.document.render
 
-import de.theunknownxy.mcdocs.docs.ParagraphElement
+import de.theunknownxy.mcdocs.docs.*
 import net.minecraft.client.Minecraft
 import java.util.ArrayList
-import de.theunknownxy.mcdocs.docs.TextCommand
-import de.theunknownxy.mcdocs.docs.LinkCommand
-import de.theunknownxy.mcdocs.docs.BoldCommand
-import de.theunknownxy.mcdocs.docs.ItalicCommand
-import de.theunknownxy.mcdocs.docs.UnderlineCommand
 
 public class ParagraphBlock(val paragraph: ParagraphElement) : Block() {
     private class FormatState(var bold: Boolean = false, var underline: Boolean = false, var italic: Boolean = false)
@@ -31,6 +26,7 @@ public class ParagraphBlock(val paragraph: ParagraphElement) : Block() {
     private var lines = ArrayList<TextCommand>()
 
     private fun rebuild() {
+        lines.clear()
         val fontrender = Minecraft.getMinecraft().fontRenderer
 
         var currentformat = FormatState()
