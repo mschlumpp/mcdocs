@@ -1,17 +1,17 @@
 package de.theunknownxy.mcdocs.gui.widget
 
 import de.theunknownxy.mcdocs.docs.DocumentationBackend
-import de.theunknownxy.mcdocs.gui.base.Point
-import de.theunknownxy.mcdocs.gui.event.MouseButton
-import de.theunknownxy.mcdocs.gui.base.Rectangle
 import de.theunknownxy.mcdocs.docs.DocumentationNodeRef
-import net.minecraft.client.audio.PositionedSoundRecord
+import de.theunknownxy.mcdocs.gui.base.Point
+import de.theunknownxy.mcdocs.gui.base.Rectangle
+import de.theunknownxy.mcdocs.gui.event.MouseButton
 import net.minecraft.client.Minecraft
+import net.minecraft.client.audio.PositionedSoundRecord
 import net.minecraft.util.ResourceLocation
 import java.util.ArrayList
 
 public class TreeBar() : ScrollChild() {
-    class object {
+    companion object {
         val COLOR_HIGHLIGHT = 0xFFFFFF
         val COLOR_ACTIVE = 0x99FF99
         val COLOR_TOPLEVEL = 0xDDDDDD

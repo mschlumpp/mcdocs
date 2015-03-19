@@ -1,27 +1,21 @@
 package de.theunknownxy.mcdocs.gui.document
 
-import java.util.ArrayList
-import de.theunknownxy.mcdocs.docs.DocumentationBackend
-import de.theunknownxy.mcdocs.docs.Content
-import de.theunknownxy.mcdocs.docs.ImageElement
-import de.theunknownxy.mcdocs.docs.ParagraphElement
-import de.theunknownxy.mcdocs.docs.HeadingElement
-import de.theunknownxy.mcdocs.docs.BlockElement
-import de.theunknownxy.mcdocs.docs.TextCommand
+import de.theunknownxy.mcdocs.docs.*
 import de.theunknownxy.mcdocs.gui.document.render.Block
+import de.theunknownxy.mcdocs.gui.document.render.HeadingBlock
 import de.theunknownxy.mcdocs.gui.document.render.ImageBlock
 import de.theunknownxy.mcdocs.gui.document.render.ParagraphBlock
-import de.theunknownxy.mcdocs.gui.document.render.HeadingBlock
 import de.theunknownxy.mcdocs.gui.widget.ScrollChild
+import java.util.ArrayList
 
 public class DocumentViewer() : ScrollChild() {
-    class object {
+    companion object {
         private val PADDING_TOP = 9f
         private val PADDING_INNER = 4f
         private val PADDING_RIGHT = 2f
     }
 
-    private data class RenderBlock(var position: Float, val block: render.Block)
+    private data class RenderBlock(var position: Float, val block: Block)
 
     var backend: DocumentationBackend? = null
 

@@ -1,19 +1,15 @@
 package de.theunknownxy.mcdocs.gui.widget
 
-import de.theunknownxy.mcdocs.gui.base.Widget
-import de.theunknownxy.mcdocs.gui.base.Root
-import de.theunknownxy.mcdocs.gui.base.Point
-import de.theunknownxy.mcdocs.gui.event.MouseButton
-import de.theunknownxy.mcdocs.gui.base.Rectangle
-import de.theunknownxy.mcdocs.gui.base.BorderImageDescription
+import de.theunknownxy.mcdocs.gui.base.*
 import de.theunknownxy.mcdocs.gui.base.Range
+import de.theunknownxy.mcdocs.gui.event.MouseButton
 import de.theunknownxy.mcdocs.utils.GuiUtils
-import org.lwjgl.opengl.GL11
 import net.minecraft.client.Minecraft
 import net.minecraft.util.ResourceLocation
+import org.lwjgl.opengl.GL11
 
 public class ScrollWidget(root: Root?, val child: ScrollChild) : Widget(root) {
-    class object {
+    companion object {
         val SCROLLER_IMAGE = ResourceLocation("mcdocs:textures/gui/controls.png")
         val SCROLLER_TIP_HEIGHT = 5
         val SCROLLER_BAR_WIDTH = 9
