@@ -1,16 +1,16 @@
 package de.theunknownxy.mcdocs
 
-import net.minecraft.client.gui.GuiScreen
-import net.minecraft.client.gui.ScaledResolution
-import de.theunknownxy.mcdocs.gui.base.Root
-import de.theunknownxy.mcdocs.gui.event.MouseButton
 import de.theunknownxy.mcdocs.gui.base.Point
 import de.theunknownxy.mcdocs.gui.base.Rectangle
-import org.lwjgl.opengl.GL11
+import de.theunknownxy.mcdocs.gui.base.Root
+import de.theunknownxy.mcdocs.gui.event.MouseButton
+import net.minecraft.client.gui.GuiScreen
+import net.minecraft.client.gui.ScaledResolution
 import org.lwjgl.input.Mouse
+import org.lwjgl.opengl.GL11
 
 public abstract class ScaledWidgetGui : GuiScreen() {
-    protected var root: Root? = null
+    protected open var root: Root? = null
 
     private var old_res_width: Int = 0
     private var old_res_height: Int = 0
