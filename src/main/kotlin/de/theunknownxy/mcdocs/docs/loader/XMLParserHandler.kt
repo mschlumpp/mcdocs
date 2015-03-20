@@ -1,18 +1,10 @@
 package de.theunknownxy.mcdocs.docs.loader
 
-import org.xml.sax.helpers.DefaultHandler
+import de.theunknownxy.mcdocs.docs.*
 import org.xml.sax.Attributes
 import org.xml.sax.SAXException
+import org.xml.sax.helpers.DefaultHandler
 import java.util.Stack
-import de.theunknownxy.mcdocs.docs.Content
-import de.theunknownxy.mcdocs.docs.ImageElement
-import de.theunknownxy.mcdocs.docs.ParagraphElement
-import de.theunknownxy.mcdocs.docs.TextCommand
-import de.theunknownxy.mcdocs.docs.BoldCommand
-import de.theunknownxy.mcdocs.docs.UnderlineCommand
-import de.theunknownxy.mcdocs.docs.ItalicCommand
-import de.theunknownxy.mcdocs.docs.LinkCommand
-import de.theunknownxy.mcdocs.docs.HeadingElement
 
 public class ParsedDocument {
     var title: String = ""
@@ -193,7 +185,7 @@ private class XMLStateParagraph(handler: XMLParserHandler) : XMLState(handler) {
         }
     }
 
-    private fun popEmitFormat() {
+    public fun popEmitFormat() {
         val oldformat = getCurrentFormat()
         formatstack.pop()
         val newformat = getCurrentFormat()
@@ -221,7 +213,8 @@ private class XMLStateParagraph(handler: XMLParserHandler) : XMLState(handler) {
             if (ref == null) {
                 throw SAXException("A link must have a ref attribute")
             }
-            handler.xmlstate.push(XMLStateLink(handler, paragraph, ref))
+            pushEmitFormat(FormatState(false, true, true))
+            handler.xmlstate.push(XMLStateLink(handler, paragraph, ref, this))
         }
     }
 
@@ -266,7 +259,7 @@ private class XMLStateHeading(handler: XMLParserHandler, val level: Int) : XMLSt
     }
 }
 
-private class XMLStateLink(handler: XMLParserHandler, val p: ParagraphElement, val ref: String) : XMLState(handler) {
+private class XMLStateLink(handler: XMLParserHandler, val p: ParagraphElement, val ref: String, val xmlp: XMLStateParagraph) : XMLState(handler) {
     var text = ""
 
     override fun startElement(uri: String, localName: String, qName: String, attributes: Attributes) {
@@ -277,6 +270,7 @@ private class XMLStateLink(handler: XMLParserHandler, val p: ParagraphElement, v
         if (qName.equalsIgnoreCase("link")) {
             assert(handler.xmlstate.pop() === this)
             p.commands.add(LinkCommand(text, ref))
+            xmlp.popEmitFormat()
         } else {
             throw SAXException("Invalid end tag '$qName' in link")
         }

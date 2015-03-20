@@ -1,10 +1,12 @@
 package de.theunknownxy.mcdocs.gui.document
 
 import de.theunknownxy.mcdocs.docs.*
+import de.theunknownxy.mcdocs.gui.base.Point
 import de.theunknownxy.mcdocs.gui.document.render.Block
 import de.theunknownxy.mcdocs.gui.document.render.HeadingBlock
 import de.theunknownxy.mcdocs.gui.document.render.ImageBlock
 import de.theunknownxy.mcdocs.gui.document.render.ParagraphBlock
+import de.theunknownxy.mcdocs.gui.event.MouseButton
 import de.theunknownxy.mcdocs.gui.widget.ScrollChild
 import java.util.ArrayList
 
@@ -39,7 +41,7 @@ public class DocumentViewer() : ScrollChild() {
             ImageBlock(block)
         }
         is ParagraphElement -> {
-            ParagraphBlock(block)
+            ParagraphBlock(block, backend!!)
         }
         is HeadingElement -> {
             HeadingBlock(block)
@@ -47,7 +49,7 @@ public class DocumentViewer() : ScrollChild() {
         else -> {
             val p = ParagraphElement()
             p.commands.add(TextCommand("Invalid element ${block.toString()}"))
-            ParagraphBlock(p)
+            ParagraphBlock(p, backend!!)
         }
     }
 
@@ -90,6 +92,17 @@ public class DocumentViewer() : ScrollChild() {
             // Draw content
             for ((position, block) in render_blocks) {
                 block.draw(0f, position, 10f)
+            }
+        }
+    }
+
+    override fun onMouseClick(pos: Point, button: MouseButton) {
+        if (backend != null) {
+            // Find the clicked block
+            val pair = render_blocks.firstOrNull { pair -> pair.position < pos.y && pos.y < pair.position + pair.block.height }
+            if (pair != null) {
+                val (position, block) = pair
+                block.onMouseClick(Point(pos.x, pos.y - position), button)
             }
         }
     }
