@@ -22,6 +22,7 @@ public class TreeBar() : ScrollChild() {
     private data class Entry(val level: Int, val text: String, val ref: DocumentationNodeRef)
 
     var dirty = true
+    var last_path: DocumentationNodeRef? = null
     var backend: DocumentationBackend? = null
     var entries: MutableList<Entry> = ArrayList()
 
@@ -69,6 +70,7 @@ public class TreeBar() : ScrollChild() {
 
             add_children(backend.current_path, 2)
             dirty = false
+            last_path = backend.current_path
         }
     }
 
@@ -76,7 +78,7 @@ public class TreeBar() : ScrollChild() {
         val fontrenderer = Minecraft?.getMinecraft()?.fontRenderer
         val backend = backend
         if (fontrenderer != null && backend != null) {
-            if (dirty) rebuild()
+            if (dirty || last_path != backend.current_path) rebuild()
 
             var dy = PADDING_TOP
             for ((level, text, ref) in entries) {
