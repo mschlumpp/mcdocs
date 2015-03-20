@@ -1,7 +1,7 @@
 build_image: shippableimages/ubuntu1404_java
 language: java
+cache: true
 jdk:
-  - openjdk6
   - openjdk7
   - oraclejdk7
   - oraclejdk8
@@ -9,7 +9,6 @@ jdk:
 before_script:
   - if [[ $SHIPPABLE_JDK_VERSION == "openjdk7" ]] ; then export JAVA_HOME="/usr/lib/jvm/java-7-openjdk-amd64"; export PATH="$PATH:/usr/lib/jvm/java-7-openjdk-amd64/bin"; export java_path="/usr/lib/jvm/java-7-openjdk-amd64/jre/bin/java"; fi
   - if [[ $SHIPPABLE_JDK_VERSION == "oraclejdk7" ]] ; then export JAVA_HOME="/usr/lib/jvm/java-7-oracle"; export PATH="$PATH:/usr/lib/jvm/java-7-oracle/bin"; export java_path="/usr/lib/jvm/java-7-oracle/jre/bin/java"; fi
-  - if [[ $SHIPPABLE_JDK_VERSION == "openjdk6" ]] ; then export JAVA_HOME="/usr/lib/jvm/java-6-openjdk-amd64"; export PATH="$PATH:/usr/lib/jvm/java-6-openjdk-amd64/bin"; export java_path="/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/java"; fi
   - if [[ $SHIPPABLE_JDK_VERSION == "oraclejdk8" ]] ; then export JAVA_HOME="/usr/lib/jvm/java-8-oracle"; export PATH="$PATH:/usr/lib/jvm/java-8-oracle/bin"; export java_path="/usr/lib/jvm/java-8-oracle/jre/bin/java"; fi
   - update-alternatives --set java $java_path
   - java -version
@@ -17,7 +16,13 @@ before_script:
 before_install:
   - ./gradlew -i setupCIWorkspace
 
+before_script: mkdir -p shippable/testresults
+
 script:
   - ./gradlew -i clean
   - ./gradlew -i test
   - ./gradlew -i reobf
+
+after_script:
+  - cp -r build/test-results/* shippable/testresults/
+  - cp build/libs/mcdocs-*.jar shippable/
