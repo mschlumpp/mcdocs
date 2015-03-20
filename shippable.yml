@@ -1,6 +1,7 @@
 build_image: shippableimages/ubuntu1404_java
 language: java
 cache: true
+archive: true
 jdk:
   - openjdk7
   - oraclejdk7
