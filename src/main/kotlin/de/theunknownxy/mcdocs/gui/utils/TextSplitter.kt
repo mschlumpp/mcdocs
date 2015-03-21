@@ -1,0 +1,104 @@
+package de.theunknownxy.mcdocs.gui.utils
+
+import de.theunknownxy.mcdocs.gui.base.Rectangle
+import net.minecraft.client.Minecraft
+import java.util.ArrayList
+import java.util.Stack
+
+public class TextSplitter(val width: Float) {
+    private enum class Style {
+        BOLD
+        ITALIC
+        UNDERLINE
+    }
+
+    public val lines: MutableList<String> = ArrayList()
+
+    private var format_dirty = true
+    private var format_stack = Stack<Style>()
+    private var current_x = 0f
+    private var current_line = StringBuilder()
+
+    public fun pushBold() {
+        format_stack.push(Style.BOLD)
+        format_dirty = true
+    }
+
+    public fun pushItalic() {
+        format_stack.push(Style.ITALIC)
+        format_dirty = true
+    }
+
+    public fun pushUnderline() {
+        format_stack.push(Style.UNDERLINE)
+        format_dirty = true
+    }
+
+    public fun popFormat() {
+        format_stack.pop()
+        format_dirty = true
+    }
+
+    private fun emitFormat(force: Boolean = false) {
+        if (format_dirty || force) {
+            // Merge all Styles on the stack
+            var bold = false
+            var italic = false
+            var underline = false
+            format_stack.forEach {
+                when (it) {
+                    Style.BOLD -> bold = true
+                    Style.ITALIC -> italic = true
+                    Style.UNDERLINE -> underline = true
+                }
+            }
+            // Append the Minecraft format codes to the current_line
+            if (bold) current_line.append("§l")
+            if (italic) current_line.append("§o")
+            if (underline) current_line.append("§n")
+
+            format_dirty = false
+        }
+    }
+
+    /**
+     * Push the current line to the formatted lines and clear the current line
+     */
+    private fun breakLine() {
+        lines.add(current_line.toString())
+        current_line = StringBuilder()
+        current_x = 0f
+    }
+
+    public fun addText(text: String): List<Rectangle> {
+        val fontrenderer = Minecraft.getMinecraft().fontRenderer
+        val rects = ArrayList<Rectangle>()
+
+        emitFormat()
+        val words = text.split("(?<=[ .])")
+        for (word in words) {
+            val wordwidth = fontrenderer.getStringWidth(word)
+
+            if(current_x + wordwidth > width) {
+                breakLine()
+                emitFormat(true)
+            }
+
+            rects.add(Rectangle(current_x, (lines.size() * fontrenderer.FONT_HEIGHT).toFloat(), wordwidth.toFloat(), fontrenderer.FONT_HEIGHT.toFloat()))
+            current_x += wordwidth
+            current_line.append(word)
+        }
+
+        return rects
+    }
+
+    /**
+     * Return the formatted lines
+     */
+    public fun toStrings(): List<String> {
+        if (current_line.length() > 0) {
+            breakLine()
+        }
+        return lines
+    }
+}
