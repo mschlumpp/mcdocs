@@ -1,0 +1,7 @@
+= Todo
+
+= Ideas
+
+* When the width changes only rebuild blocks which change the content(fragile flag?)
+* Store/Restore position in document
+* Write some documentation about the internals of MCDocs
