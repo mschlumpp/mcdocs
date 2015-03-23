@@ -1,36 +1,22 @@
 package de.theunknownxy.mcdocs.gui.utils
 
+import de.theunknownxy.mcdocs.docs.FormatStyle
 import de.theunknownxy.mcdocs.gui.base.Rectangle
 import net.minecraft.client.Minecraft
 import java.util.ArrayList
 import java.util.Stack
 
 public class TextSplitter(val width: Float) {
-    private enum class Style {
-        BOLD
-        ITALIC
-        UNDERLINE
-    }
-
     public val lines: MutableList<String> = ArrayList()
 
     private var format_dirty = true
-    private var format_stack = Stack<Style>()
+    private var format_stack = Stack<FormatStyle>()
     private var current_x = 0f
     private var current_line = StringBuilder()
 
-    public fun pushBold() {
-        format_stack.push(Style.BOLD)
-        format_dirty = true
-    }
 
-    public fun pushItalic() {
-        format_stack.push(Style.ITALIC)
-        format_dirty = true
-    }
-
-    public fun pushUnderline() {
-        format_stack.push(Style.UNDERLINE)
+    public fun pushFormat(style: FormatStyle) {
+        format_stack.push(style)
         format_dirty = true
     }
 
@@ -41,15 +27,18 @@ public class TextSplitter(val width: Float) {
 
     private fun emitFormat(force: Boolean = false) {
         if (format_dirty || force) {
+            // Clear previous formatting
+            current_line.append("§r")
+
             // Merge all Styles on the stack
             var bold = false
             var italic = false
             var underline = false
             format_stack.forEach {
                 when (it) {
-                    Style.BOLD -> bold = true
-                    Style.ITALIC -> italic = true
-                    Style.UNDERLINE -> underline = true
+                    FormatStyle.BOLD -> bold = true
+                    FormatStyle.ITALIC -> italic = true
+                    FormatStyle.UNDERLINE -> underline = true
                 }
             }
             // Append the Minecraft format codes to the current_line

@@ -2,25 +2,35 @@ package de.theunknownxy.mcdocs.docs
 
 import java.util.ArrayList
 
-open class InlineCommand
-class TextCommand(var text: String) : InlineCommand()
-class LinkCommand(var text: String, var ref: String) : InlineCommand()
+/*
+ * Inline Elements
+ */
+open class InlineElement
 
-open class FormatCommand : InlineCommand()
-class BoldCommand(var enable: Boolean) : FormatCommand()
-class ItalicCommand(var enable: Boolean) : FormatCommand()
-class UnderlineCommand(var enable: Boolean) : FormatCommand()
+class TextElement(val text: String) : InlineElement()
+class LinkElement(val text: String, val ref: String) : InlineElement()
 
-open class BlockElement {
-
+open class InlineContainerElement : InlineElement() {
+    val childs: MutableList<InlineElement> = ArrayList()
 }
 
-class ImageElement(var src: String, val width: Int, val height: Int) : BlockElement()
-class HeadingElement(val level: Int, val text: String) : BlockElement()
-
-class ParagraphElement : BlockElement() {
-    var commands: MutableList<InlineCommand> = ArrayList()
+enum class FormatStyle {
+    BOLD
+    ITALIC
+    UNDERLINE
 }
+
+class FormatElement(val style: FormatStyle) : InlineContainerElement()
+class ParagraphElement() : InlineContainerElement()
+
+/*
+ * Block elements
+ */
+open class BlockElement
+
+class ImageBlock(var src: String, val width: Int, val height: Int) : BlockElement()
+class HeadingBlock(val level: Int, val text: String) : BlockElement()
+class ParagraphBlock(val value: ParagraphElement) : BlockElement()
 
 class Content {
     var blocks: MutableList<BlockElement> = ArrayList()

@@ -1,13 +1,13 @@
 package de.theunknownxy.mcdocs.gui.document.segments
 
-import de.theunknownxy.mcdocs.docs.ImageElement
+import de.theunknownxy.mcdocs.docs.ImageBlock
 import de.theunknownxy.mcdocs.gui.document.Document
 import de.theunknownxy.mcdocs.utils.GuiUtils
 import net.minecraft.client.Minecraft
 import net.minecraft.util.ResourceLocation
 import org.lwjgl.opengl.GL11
 
-class ImageSegment(document: Document, val elem: ImageElement) : Segment(document) {
+class ImageSegment(document: Document, val elem: ImageBlock) : Segment(document) {
     companion object {
         private val PADDING_BOTTOM = 3
     }

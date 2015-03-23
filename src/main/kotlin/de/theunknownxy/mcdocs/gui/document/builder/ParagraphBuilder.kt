@@ -5,33 +5,39 @@ import de.theunknownxy.mcdocs.gui.document.Document
 import de.theunknownxy.mcdocs.gui.document.segments.TextSegment
 import de.theunknownxy.mcdocs.gui.utils.TextSplitter
 
-class ParagraphBuilder(val document: Document, val paragraph: ParagraphElement) : Builder {
+class ParagraphBuilder(val document: Document, val paragraph: ParagraphBlock) : Builder {
+
+
     public override fun build() {
         // Split the text
         val splitter = TextSplitter(document.width)
 
-        for (command in paragraph.commands) {
-            when (command) {
-                is TextCommand -> {
-                    splitter.addText(command.text)
+        fun build_rec(element: InlineElement) {
+            when(element) {
+                is TextElement -> {
+                    splitter.addText(element.text)
                 }
-                is LinkCommand -> {
-                    splitter.addText(command.text).forEach {
-                        document.addLink(it, DocumentationNodeRef(command.ref))
+                is LinkElement -> {
+                    splitter.pushFormat(FormatStyle.ITALIC)
+                    splitter.pushFormat(FormatStyle.UNDERLINE)
+                    splitter.addText(element.text).forEach {
+                        document.addLink(it, DocumentationNodeRef(element.ref))
                     }
+                    splitter.popFormat()
+                    splitter.popFormat()
                 }
-                is BoldCommand -> {
-                    //FIXME: Are they really symetric after XMLParserHandler?
-                    if (command.enable) splitter.pushBold() else splitter.popFormat()
+                is FormatElement -> {
+                    splitter.pushFormat(element.style)
+                    element.childs.forEach { build_rec(it) }
+                    splitter.popFormat()
                 }
-                is ItalicCommand -> {
-                    if (command.enable) splitter.pushItalic() else splitter.popFormat()
-                }
-                is UnderlineCommand -> {
-                    if (command.enable) splitter.pushUnderline() else splitter.popFormat()
+                is InlineContainerElement -> {
+                    element.childs.forEach { build_rec(it) }
                 }
             }
         }
+
+        build_rec(paragraph.value)
 
         // Generate segments
         splitter.toStrings().forEach {
