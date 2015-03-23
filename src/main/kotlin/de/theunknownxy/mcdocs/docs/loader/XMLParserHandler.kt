@@ -17,6 +17,101 @@ private abstract class XMLState(protected val handler: XMLParserHandler) {
     abstract fun characters(str: String)
 }
 
+private abstract class XMLStateInline(handler: XMLParserHandler, val parent: XMLStateInlineContainer?) : XMLState(handler) {
+    abstract val name: String
+
+    /**
+     * Default implementation for non container tags
+     */
+    override fun startElement(uri: String, localName: String, qName: String, attributes: Attributes) {
+        throw SAXException("Invalid start tag '$qName' in '$name' tag")
+    }
+
+    /**
+     * Checks the whether the end tag matches the start tag and then runs done()
+     */
+    final override fun endElement(uri: String?, localName: String, qName: String) {
+        if (!qName.equalsIgnoreCase(name)) {
+            throw SAXException("Invalid end tag '$qName'; expected a '$name' end tag")
+        }
+        handler.xmlstate.pop()
+        done()
+    }
+
+    /**
+     * Called when the tag ended
+     */
+    abstract protected fun done()
+}
+
+private abstract class XMLStateInlineContainer(handler: XMLParserHandler, parent: XMLStateInlineContainer?) : XMLStateInline(handler, parent) {
+    abstract val container: InlineContainerElement
+
+    final override fun startElement(uri: String, localName: String, qName: String, attributes: Attributes) {
+        when (qName) {
+            "link" -> {
+                val ref = attributes.getValue("ref")
+                handler.xmlstate.push(XMLStateLink(handler, this, ref))
+            }
+            "b" -> {
+                handler.xmlstate.push(XMLStateBold(handler, this))
+            }
+            "i" -> {
+                handler.xmlstate.push(XMLStateItalic(handler, this))
+            }
+            "u" -> {
+                handler.xmlstate.push(XMLStateUnderline(handler, this))
+            }
+        }
+    }
+
+    override fun characters(str: String) {
+        container.childs.add(TextElement(str))
+    }
+
+    override fun done() {
+        parent?.container?.childs?.add(container)
+    }
+}
+
+private class XMLStateLink(handler: XMLParserHandler, parent: XMLStateInlineContainer?, val ref: String) : XMLStateInline(handler, parent) {
+    override val name = "link"
+    private var text = ""
+
+    override fun characters(str: String) {
+        text += str
+    }
+
+    override fun done() {
+        parent?.container?.childs?.add(LinkElement(text, ref))
+    }
+}
+
+private class XMLStateParagraph(handler: XMLParserHandler) : XMLStateInlineContainer(handler, null) {
+    override val container = ParagraphElement()
+    override val name = "p"
+
+    override fun done() {
+        handler.document.content?.blocks?.add(ParagraphBlock(container))
+    }
+}
+
+private class XMLStateBold(handler: XMLParserHandler, parent: XMLStateInlineContainer?) : XMLStateInlineContainer(handler, parent) {
+    override val container = FormatElement(FormatStyle.BOLD)
+    override val name = "b"
+}
+
+private class XMLStateItalic(handler: XMLParserHandler, parent: XMLStateInlineContainer?) : XMLStateInlineContainer(handler, parent) {
+    override val container = FormatElement(FormatStyle.ITALIC)
+    override val name = "i"
+}
+
+private class XMLStateUnderline(handler: XMLParserHandler, parent: XMLStateInlineContainer?) : XMLStateInlineContainer(handler, parent) {
+    override val container = FormatElement(FormatStyle.UNDERLINE)
+    override val name = "u"
+}
+
+
 /**
  * Top-level state
  */
@@ -37,9 +132,6 @@ private class XMLStateStart(handler: XMLParserHandler) : XMLState(handler) {
     }
 }
 
-/**
- * Within document tag
- */
 private class XMLStateDocument(handler: XMLParserHandler) : XMLState(handler) {
     override fun startElement(uri: String, localName: String, qName: String, attributes: Attributes) {
         if (qName.equalsIgnoreCase("title")) {
@@ -62,9 +154,6 @@ private class XMLStateDocument(handler: XMLParserHandler) : XMLState(handler) {
     }
 }
 
-/**
- * Within title tag
- */
 private class XMLStateTitle(handler: XMLParserHandler) : XMLState(handler) {
     private var title: String = ""
 
@@ -86,9 +175,6 @@ private class XMLStateTitle(handler: XMLParserHandler) : XMLState(handler) {
     }
 }
 
-/**
- * Within content tag
- */
 private class XMLStateContent(handler: XMLParserHandler) : XMLState(handler) {
     override fun startElement(uri: String, localName: String, qName: String, attributes: Attributes) {
         if (qName.equalsIgnoreCase("img")) {
@@ -125,9 +211,6 @@ private class XMLStateContent(handler: XMLParserHandler) : XMLState(handler) {
     }
 }
 
-/**
- * Within img tag
- */
 private class XMLStateImage(handler: XMLParserHandler, private val src: String, private val width: Int, private val height: Int) : XMLState(handler) {
     override fun startElement(uri: String, localName: String, qName: String, attributes: Attributes) {
         throw SAXException("Tag '$qName' is not allowed in a image tag")
@@ -136,7 +219,7 @@ private class XMLStateImage(handler: XMLParserHandler, private val src: String, 
     override fun endElement(uri: String?, localName: String, qName: String) {
         if (qName.equalsIgnoreCase("img")) {
             assert(handler.xmlstate.pop() === this)
-            handler.document.content?.blocks?.add(ImageElement(src, width, height))
+            handler.document.content?.blocks?.add(ImageBlock(src, width, height))
         } else {
             throw SAXException("Invalid end tag '$qName' in img")
         }
@@ -144,97 +227,6 @@ private class XMLStateImage(handler: XMLParserHandler, private val src: String, 
 
     override fun characters(str: String) {
         throw SAXException("Text is not allowed in img")
-    }
-}
-
-/**
- * Within paragraph
- */
-private class XMLStateParagraph(handler: XMLParserHandler) : XMLState(handler) {
-    private data class FormatState(var bold: Boolean, var underline: Boolean, var italic: Boolean)
-
-    private var formatstack: Stack<FormatState> = Stack()
-    private var paragraph = ParagraphElement()
-
-    private fun getCurrentFormat(): FormatState {
-        val currentstate = FormatState(false, false, false)
-        for (cmd in formatstack) {
-            if (cmd.bold) {
-                currentstate.bold = true
-            }
-            if (cmd.italic) {
-                currentstate.italic = true
-            }
-            if (cmd.underline) {
-                currentstate.underline = true
-            }
-        }
-        return currentstate
-    }
-
-    private fun pushEmitFormat(format: FormatState) {
-        formatstack.push(format)
-        if (format.bold) {
-            paragraph.commands.add(BoldCommand(true))
-        }
-        if (format.italic) {
-            paragraph.commands.add(ItalicCommand(true))
-        }
-        if (format.underline) {
-            paragraph.commands.add(UnderlineCommand(true))
-        }
-    }
-
-    public fun popEmitFormat() {
-        val oldformat = getCurrentFormat()
-        formatstack.pop()
-        val newformat = getCurrentFormat()
-
-        if (oldformat.italic != newformat.italic) {
-            paragraph.commands.add(ItalicCommand(newformat.italic))
-        }
-        if (oldformat.bold != newformat.bold) {
-            paragraph.commands.add(BoldCommand(newformat.bold))
-        }
-        if (oldformat.underline != newformat.underline) {
-            paragraph.commands.add(UnderlineCommand(newformat.underline))
-        }
-    }
-
-    override fun startElement(uri: String, localName: String, qName: String, attributes: Attributes) {
-        if (qName.equalsIgnoreCase("b")) {
-            pushEmitFormat(FormatState(true, false, false))
-        } else if (qName.equalsIgnoreCase("i")) {
-            pushEmitFormat(FormatState(false, false, true))
-        } else if (qName.equalsIgnoreCase("u")) {
-            pushEmitFormat(FormatState(false, true, false))
-        } else if (qName.equalsIgnoreCase("link")) {
-            val ref: String? = attributes.getValue("ref")
-            if (ref == null) {
-                throw SAXException("A link must have a ref attribute")
-            }
-            pushEmitFormat(FormatState(false, true, true))
-            handler.xmlstate.push(XMLStateLink(handler, paragraph, ref, this))
-        }
-    }
-
-    override fun endElement(uri: String?, localName: String, qName: String) {
-        if (qName.equalsIgnoreCase("p")) {
-            assert(handler.xmlstate.pop() === this)
-            handler.document.content?.blocks?.add(paragraph)
-        } else if (qName.equalsIgnoreCase("b")) {
-            popEmitFormat()
-        } else if (qName.equalsIgnoreCase("i")) {
-            popEmitFormat()
-        } else if (qName.equalsIgnoreCase("u")) {
-            popEmitFormat()
-        } else {
-            throw SAXException("Invalid end tag '$qName' in paragraph")
-        }
-    }
-
-    override fun characters(str: String) {
-        paragraph.commands.add(TextCommand(str))
     }
 }
 
@@ -248,31 +240,9 @@ private class XMLStateHeading(handler: XMLParserHandler, val level: Int) : XMLSt
     override fun endElement(uri: String?, localName: String, qName: String) {
         if (qName.equalsIgnoreCase("h$level")) {
             assert(handler.xmlstate.pop() === this)
-            handler.document.content?.blocks?.add(HeadingElement(level, text))
+            handler.document.content?.blocks?.add(HeadingBlock(level, text))
         } else {
             throw SAXException("Invalid end tag '$qName' in heading")
-        }
-    }
-
-    override fun characters(str: String) {
-        text += str
-    }
-}
-
-private class XMLStateLink(handler: XMLParserHandler, val p: ParagraphElement, val ref: String, val xmlp: XMLStateParagraph) : XMLState(handler) {
-    var text = ""
-
-    override fun startElement(uri: String, localName: String, qName: String, attributes: Attributes) {
-        throw SAXException("Invalid tag '$qName' in link")
-    }
-
-    override fun endElement(uri: String?, localName: String, qName: String) {
-        if (qName.equalsIgnoreCase("link")) {
-            assert(handler.xmlstate.pop() === this)
-            p.commands.add(LinkCommand(text, ref))
-            xmlp.popEmitFormat()
-        } else {
-            throw SAXException("Invalid end tag '$qName' in link")
         }
     }
 

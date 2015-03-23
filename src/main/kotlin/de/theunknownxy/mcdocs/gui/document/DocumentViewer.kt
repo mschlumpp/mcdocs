@@ -1,14 +1,9 @@
 package de.theunknownxy.mcdocs.gui.document
 
-import de.theunknownxy.mcdocs.docs.*
+import de.theunknownxy.mcdocs.docs.DocumentationBackend
 import de.theunknownxy.mcdocs.gui.base.Point
-import de.theunknownxy.mcdocs.gui.document.render.Block
-import de.theunknownxy.mcdocs.gui.document.render.HeadingBlock
-import de.theunknownxy.mcdocs.gui.document.render.ImageBlock
-import de.theunknownxy.mcdocs.gui.document.render.ParagraphBlock
 import de.theunknownxy.mcdocs.gui.event.MouseButton
 import de.theunknownxy.mcdocs.gui.widget.ScrollChild
-import java.util.ArrayList
 
 public class DocumentViewer() : ScrollChild() {
     companion object {
@@ -17,93 +12,36 @@ public class DocumentViewer() : ScrollChild() {
         private val PADDING_RIGHT = 2f
     }
 
-    private data class RenderBlock(var position: Float, val block: Block)
-
     var backend: DocumentationBackend? = null
 
-    var current_content: Content? = null
-    var render_blocks: MutableList<RenderBlock> = ArrayList()
-
-    private fun rebuild_blocks() {
-        render_blocks.clear()
-        if (current_content != null) {
-            for (block in current_content!!.blocks) {
-                render_blocks.add(RenderBlock(0f, create_render_block(block)))
-            }
-        }
-    }
-
-    /**
-     * Create a render.Block from the passed BlockElement
-     */
-    private fun create_render_block(block: BlockElement): Block = when (block) {
-        is ImageElement -> {
-            ImageBlock(block)
-        }
-        is ParagraphElement -> {
-            ParagraphBlock(block, backend!!)
-        }
-        is HeadingElement -> {
-            HeadingBlock(block)
-        }
-        else -> {
-            val p = ParagraphElement()
-            p.commands.add(TextCommand("Invalid element ${block.toString()}"))
-            ParagraphBlock(p, backend!!)
-        }
-    }
-
-    /**
-     * Update the width of each block and adjust the positions accordingly
-     */
-    private fun update_width() {
-        var lastposition = PADDING_TOP
-        for (pair in render_blocks) {
-            pair.position = lastposition
-            pair.block.width = width - PADDING_RIGHT
-            lastposition += pair.block.height + PADDING_INNER
-        }
-    }
+    var current_document: Document? = null
 
     override fun onWidthChanged() {
-        super.onWidthChanged()
-        update_width()
+        current_document?.width = width + PADDING_RIGHT
     }
 
     override fun getHeight(): Float {
-        val last = render_blocks.lastOrNull()
-        if (last != null) {
-            return last.position + last.block.height
-        } else {
-            return 0f
-        }
+        return current_document?.height ?: 0f
     }
 
     override fun draw() {
+        val backend = backend
         if (backend != null) {
-            // Update blocks if the page changed
-            val new_content = backend!!.getContent(backend!!.current_page)
-            if (new_content != current_content) {
-                current_content = new_content
-                rebuild_blocks()
-                update_width()
+            // Update document if the page changed
+            val new_content = backend.getContent(backend.current_page)
+            if (new_content != current_document?.content) {
+                current_document = Document(backend, new_content)
+                onWidthChanged() // Trigger manually a rebuild
             }
 
-            // Draw content
-            for ((position, block) in render_blocks) {
-                block.draw(0f, position, 10f)
-            }
+            current_document?.draw()
         }
     }
 
     override fun onMouseClick(pos: Point, button: MouseButton) {
+        val backend = backend
         if (backend != null) {
-            // Find the clicked block
-            val pair = render_blocks.firstOrNull { pair -> pair.position < pos.y && pos.y < pair.position + pair.block.height }
-            if (pair != null) {
-                val (position, block) = pair
-                block.onMouseClick(Point(pos.x, pos.y - position), button)
-            }
+            current_document?.onMouseClick(pos, button)?.run(backend)
         }
     }
 }

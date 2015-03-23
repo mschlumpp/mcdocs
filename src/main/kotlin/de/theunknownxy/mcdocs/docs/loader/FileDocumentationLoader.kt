@@ -57,8 +57,8 @@ public class FileDocumentationLoader(private val root_path: Path) : Documentatio
 
             // Create a page with the error
             content = Content()
-            val p: ParagraphElement = ParagraphElement()
-            p.commands.add(TextCommand("Invalid document($filepath): $e"))
+            val p: ParagraphBlock = ParagraphBlock(ParagraphElement())
+            p.value.childs.add(TextElement("Invalid document($filepath): $e"))
             content?.blocks?.add(p)
         }
 
