@@ -18,13 +18,13 @@ class ParagraphBuilder(val document: Document, val paragraph: ParagraphBlock) : 
                     splitter.addText(element.text)
                 }
                 is LinkElement -> {
-                    splitter.pushFormat(FormatStyle.ITALIC)
-                    splitter.pushFormat(FormatStyle.UNDERLINE)
-                    splitter.addText(element.text).forEach {
-                        document.addLink(it, DocumentationNodeRef(element.ref))
-                    }
-                    splitter.popFormat()
-                    splitter.popFormat()
+                    splitter.wrapFormat(FormatStyle.ITALIC, {
+                        splitter.wrapFormat(FormatStyle.UNDERLINE, {
+                            splitter.addText(element.text).forEach {
+                                document.addLink(it, DocumentationNodeRef(element.ref))
+                            }
+                        })
+                    })
                 }
                 is FormatElement -> {
                     splitter.pushFormat(element.style)

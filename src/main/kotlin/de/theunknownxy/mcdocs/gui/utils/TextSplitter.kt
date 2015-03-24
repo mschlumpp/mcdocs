@@ -14,6 +14,11 @@ public class TextSplitter(val width: Float) {
     private var current_x = 0f
     private var current_line = StringBuilder()
 
+    public fun wrapFormat(style: FormatStyle, f: () -> Unit) {
+        pushFormat(style)
+        f()
+        popFormat()
+    }
 
     public fun pushFormat(style: FormatStyle) {
         format_stack.push(style)
@@ -68,7 +73,7 @@ public class TextSplitter(val width: Float) {
         for (word in words) {
             val wordwidth = fontrenderer.getStringWidth(word)
 
-            if(current_x + wordwidth > width) {
+            if (current_x + wordwidth > width) {
                 breakLine()
                 emitFormat(true)
             }
