@@ -1,6 +1,7 @@
 package de.theunknownxy.mcdocs.docs.loader
 
 import de.theunknownxy.mcdocs.docs.*
+import de.theunknownxy.mcdocs.docs.loader.xml.XMLParserHandler
 import java.nio.file.Path
 import java.util.ArrayList
 import javax.xml.parsers.SAXParserFactory
