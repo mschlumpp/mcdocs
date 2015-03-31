@@ -13,18 +13,18 @@ class ParagraphBuilder(val document: Document, val paragraph: ParagraphBlock) : 
         val splitter = TextSplitter(document.width)
 
         fun build_rec(element: InlineElement) {
-            when(element) {
+            when (element) {
                 is TextElement -> {
                     splitter.addText(element.text)
                 }
                 is LinkElement -> {
-                    splitter.wrapFormat(FormatStyle.ITALIC, {
-                        splitter.wrapFormat(FormatStyle.UNDERLINE, {
+                    splitter.wrapFormat(FormatStyle.ITALIC) {
+                        splitter.wrapFormat(FormatStyle.UNDERLINE) {
                             splitter.addText(element.text).forEach {
                                 document.addLink(it, DocumentationNodeRef(element.ref))
                             }
-                        })
-                    })
+                        }
+                    }
                 }
                 is FormatElement -> {
                     splitter.pushFormat(element.style)
