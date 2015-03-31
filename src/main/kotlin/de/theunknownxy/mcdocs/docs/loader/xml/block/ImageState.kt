@@ -14,7 +14,7 @@ class ImageState(handler: XMLParserHandler, private val src: String, private val
     override fun endElement(uri: String?, localName: String, qName: String) {
         if (qName.equalsIgnoreCase("img")) {
             assert(handler.xmlstate.pop() === this)
-            handler.document.content?.blocks?.add(ImageBlock(src, width, height))
+            handler.document.content.blocks.add(ImageBlock(src, width, height))
         } else {
             throw SAXException("Invalid end tag '$qName' in img")
         }

@@ -9,7 +9,7 @@ import java.util.Stack
 public class XMLParserHandler : DefaultHandler() {
     public class ParsedDocument {
         var title: String = ""
-        var content: Content? = null
+        var content: Content = Content()
     }
 
     var document: ParsedDocument = ParsedDocument()

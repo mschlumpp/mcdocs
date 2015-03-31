@@ -16,7 +16,7 @@ class HeadingState(handler: XMLParserHandler, val level: Int) : State(handler) {
     override fun endElement(uri: String?, localName: String, qName: String) {
         if (qName.equalsIgnoreCase("h$level")) {
             assert(handler.xmlstate.pop() === this)
-            handler.document.content?.blocks?.add(HeadingBlock(level, text))
+            handler.document.content.blocks.add(HeadingBlock(level, text))
         } else {
             throw SAXException("Invalid end tag '$qName' in heading")
         }

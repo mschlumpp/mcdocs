@@ -1,6 +1,5 @@
 package de.theunknownxy.mcdocs.docs.loader.xml
 
-import de.theunknownxy.mcdocs.docs.Content
 import org.xml.sax.Attributes
 import org.xml.sax.SAXException
 
@@ -9,7 +8,6 @@ class DocumentState(handler: XMLParserHandler) : State(handler) {
         if (qName.equalsIgnoreCase("title")) {
             handler.xmlstate.push(TitleState(handler))
         } else if (qName.equalsIgnoreCase("content")) {
-            handler.document.content = Content()
             handler.xmlstate.push(ContentState(handler))
         }
     }

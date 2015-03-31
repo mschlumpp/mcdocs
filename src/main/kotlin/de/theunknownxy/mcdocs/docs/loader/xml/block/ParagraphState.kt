@@ -10,6 +10,6 @@ class ParagraphState(handler: XMLParserHandler) : InlineContainerState(handler, 
     override val name = "p"
 
     override fun done() {
-        handler.document.content?.blocks?.add(ParagraphBlock(container))
+        handler.document.content.blocks.add(ParagraphBlock(container))
     }
 }
