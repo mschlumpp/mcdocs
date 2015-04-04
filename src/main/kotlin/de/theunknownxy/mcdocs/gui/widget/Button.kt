@@ -1,13 +1,13 @@
 package de.theunknownxy.mcdocs.gui.widget
 
+import de.theunknownxy.mcdocs.gui.base.Point
 import de.theunknownxy.mcdocs.gui.base.Root
 import de.theunknownxy.mcdocs.gui.base.Widget
-import net.minecraft.client.gui.GuiButton
-import net.minecraft.client.Minecraft
-import de.theunknownxy.mcdocs.gui.base.Point
 import de.theunknownxy.mcdocs.gui.event.MouseButton
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiButton
 
-public class Button(root: Root?): Widget(root) {
+public class Button(root: Root?) : Widget(root) {
     private var button: GuiButton? = null
     public var callback: ((Button) -> Unit)? = null
     public var text: String
@@ -21,7 +21,7 @@ public class Button(root: Root?): Widget(root) {
         }
 
     private fun lazy_init() {
-        if(button == null) {
+        if (button == null) {
             button = GuiButton(1234, this.x.toInt(), this.y.toInt(), this.width.toInt(), this.height.toInt(), "")
         }
     }
@@ -34,7 +34,7 @@ public class Button(root: Root?): Widget(root) {
 
     override fun onMouseClick(pos: Point, button: MouseButton): Widget? {
         val mc = Minecraft.getMinecraft()
-        if(this.button?.mousePressed(mc, pos.x.toInt(), pos.y.toInt())!!) {
+        if (this.button?.mousePressed(mc, pos.x.toInt(), pos.y.toInt())!!) {
             this.button?.func_146113_a(mc.getSoundHandler())
             callback?.invoke(this)
         }

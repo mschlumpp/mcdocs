@@ -11,24 +11,24 @@ public class DocumentationBackend(loader: DocumentationLoader) {
 
     public fun navigate(path: DocumentationNodeRef) {
         val node = cache[path]
-        if(node.children.size() > 0 && path.parent() != current_path) {
+        if (node.children.size() > 0 && path.parent() != current_path) {
             current_path = node.path.parent()
         }
-        if(node.content != null) {
+        if (node.content != null) {
             current_page = path
         }
     }
 
     public fun getContent(path: DocumentationNodeRef): Content {
         val content = cache[path].content
-        if(content != null) {
+        if (content != null) {
             return content
         } else {
             return Content()
         }
     }
 
-    public fun getTitle(path: DocumentationNodeRef) : String {
+    public fun getTitle(path: DocumentationNodeRef): String {
         return cache[path].title
     }
 

@@ -1,10 +1,10 @@
 package de.theunknownxy.mcdocs.gui.container
 
 import de.theunknownxy.mcdocs.gui.base.Point
-import de.theunknownxy.mcdocs.gui.event.MouseButton
-import de.theunknownxy.mcdocs.gui.base.Widget
-import java.util.ArrayList
 import de.theunknownxy.mcdocs.gui.base.Root
+import de.theunknownxy.mcdocs.gui.base.Widget
+import de.theunknownxy.mcdocs.gui.event.MouseButton
+import java.util.ArrayList
 
 public abstract class MultiContainer(root: Root?) : Container(root) {
     public var children: MutableList<Widget> = ArrayList()

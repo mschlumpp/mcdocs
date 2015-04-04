@@ -6,8 +6,6 @@ import de.theunknownxy.mcdocs.gui.document.segments.TextSegment
 import de.theunknownxy.mcdocs.gui.utils.TextSplitter
 
 class ParagraphBuilder(val document: Document, val paragraph: ParagraphBlock) : Builder {
-
-
     public override fun build() {
         // Split the text
         val splitter = TextSplitter(document.width)

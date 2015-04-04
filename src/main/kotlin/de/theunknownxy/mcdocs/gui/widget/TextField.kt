@@ -1,9 +1,9 @@
 package de.theunknownxy.mcdocs.gui.widget
 
-import de.theunknownxy.mcdocs.gui.base.Widget
 import de.theunknownxy.mcdocs.gui.base.Point
-import de.theunknownxy.mcdocs.gui.event.MouseButton
 import de.theunknownxy.mcdocs.gui.base.Root
+import de.theunknownxy.mcdocs.gui.base.Widget
+import de.theunknownxy.mcdocs.gui.event.MouseButton
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiTextField
 

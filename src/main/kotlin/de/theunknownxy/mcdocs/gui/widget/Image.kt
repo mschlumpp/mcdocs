@@ -1,9 +1,9 @@
 package de.theunknownxy.mcdocs.gui.widget
 
-import de.theunknownxy.mcdocs.gui.base.Widget
 import de.theunknownxy.mcdocs.gui.base.Root
-import net.minecraft.util.ResourceLocation
+import de.theunknownxy.mcdocs.gui.base.Widget
 import net.minecraft.client.Minecraft
+import net.minecraft.util.ResourceLocation
 import org.lwjgl.opengl.GL11
 
 public class Image(root: Root?) : Widget(root) {

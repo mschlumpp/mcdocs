@@ -1,8 +1,8 @@
 package de.theunknownxy.mcdocs.gui.container
 
+import de.theunknownxy.mcdocs.gui.base.Root
 import de.theunknownxy.mcdocs.gui.layout.ExpandingPolicy
 import de.theunknownxy.mcdocs.gui.layout.FixedPolicy
-import de.theunknownxy.mcdocs.gui.base.Root
 
 public class VerticalBox(root: Root?) : MultiContainer(root) {
     override fun recalculateChildren() {

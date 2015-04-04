@@ -6,10 +6,10 @@ import de.theunknownxy.mcdocs.docs.ImageBlock
 import de.theunknownxy.mcdocs.docs.ParagraphBlock
 import de.theunknownxy.mcdocs.gui.document.Document
 
-class ContentBuilder(val document: Document, val content: Content): Builder {
+class ContentBuilder(val document: Document, val content: Content) : Builder {
     override fun build() {
-        for(element in content.blocks) {
-            when(element) {
+        for (element in content.blocks) {
+            when (element) {
                 is ParagraphBlock -> {
                     ParagraphBuilder(document, element).build()
                 }

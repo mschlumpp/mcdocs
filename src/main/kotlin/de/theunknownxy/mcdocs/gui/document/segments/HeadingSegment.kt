@@ -5,7 +5,7 @@ import de.theunknownxy.mcdocs.gui.document.Document
 import net.minecraft.client.Minecraft
 import org.lwjgl.opengl.GL11
 
-class HeadingSegment(document: Document, val heading: HeadingBlock): Segment(document) {
+class HeadingSegment(document: Document, val heading: HeadingBlock) : Segment(document) {
     private val base_height = 9f
     private fun heading_scale(): Float = -0.15f * heading.level + 1.5f
     private fun font_height(): Float = heading_scale() * base_height

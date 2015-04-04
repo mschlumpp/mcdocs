@@ -1,10 +1,10 @@
 package de.theunknownxy.mcdocs
 
-import cpw.mods.fml.common.gameevent.InputEvent
 import cpw.mods.fml.common.eventhandler.SubscribeEvent
-import net.minecraft.client.Minecraft
+import cpw.mods.fml.common.gameevent.InputEvent
 import de.theunknownxy.mcdocs.docs.DocumentationBackend
 import de.theunknownxy.mcdocs.docs.loader.FileDocumentationLoader
+import net.minecraft.client.Minecraft
 import java.io.File
 
 public class KeyInputHandler {

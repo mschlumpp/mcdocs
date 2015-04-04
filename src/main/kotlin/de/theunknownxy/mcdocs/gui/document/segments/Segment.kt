@@ -19,7 +19,7 @@ abstract class Segment(val document: Document) {
     public open var width: Float = 0f
     public abstract val height: Float
 
-    public fun rect(): Rectangle = Rectangle(x,y, width, height)
+    public fun rect(): Rectangle = Rectangle(x, y, width, height)
 
     public abstract fun draw()
 }

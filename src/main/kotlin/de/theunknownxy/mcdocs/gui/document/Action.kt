@@ -7,7 +7,7 @@ trait Action {
     fun run(backend: DocumentationBackend)
 }
 
-class NavigateAction(val ref: DocumentationNodeRef): Action {
+class NavigateAction(val ref: DocumentationNodeRef) : Action {
     override fun run(backend: DocumentationBackend) {
         backend.navigate(ref)
     }

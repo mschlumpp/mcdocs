@@ -43,7 +43,7 @@ public abstract class ScaledWidgetGui : GuiScreen() {
     override fun updateScreen() {
         // Check for the mouse wheel
         val v = Mouse.getDWheel()
-        if(v != 0) {
+        if (v != 0) {
             root?.onMouseScroll(root!!.mouse_pos, v)
         }
 

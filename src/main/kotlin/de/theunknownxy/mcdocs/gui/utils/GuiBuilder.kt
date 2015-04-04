@@ -1,14 +1,20 @@
 package de.theunknownxy.mcdocs.gui.utils
 
+import de.theunknownxy.mcdocs.docs.DocumentationBackend
 import de.theunknownxy.mcdocs.gui.base.Root
 import de.theunknownxy.mcdocs.gui.base.Widget
-import de.theunknownxy.mcdocs.gui.layout.*
-import de.theunknownxy.mcdocs.gui.container.*
+import de.theunknownxy.mcdocs.gui.container.HorizontalBox
+import de.theunknownxy.mcdocs.gui.container.MultiContainer
+import de.theunknownxy.mcdocs.gui.container.SingleContainer
+import de.theunknownxy.mcdocs.gui.container.VerticalBox
+import de.theunknownxy.mcdocs.gui.document.DocumentViewer
+import de.theunknownxy.mcdocs.gui.layout.Constraint
+import de.theunknownxy.mcdocs.gui.layout.ExpandingPolicy
+import de.theunknownxy.mcdocs.gui.layout.FixedPolicy
+import de.theunknownxy.mcdocs.gui.layout.Policy
 import de.theunknownxy.mcdocs.gui.widget.*
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.util.ResourceLocation
-import de.theunknownxy.mcdocs.docs.DocumentationBackend
-import de.theunknownxy.mcdocs.gui.document.DocumentViewer
 
 /****************
  * Base classes *
