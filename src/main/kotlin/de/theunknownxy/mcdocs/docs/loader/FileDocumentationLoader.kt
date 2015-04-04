@@ -2,6 +2,7 @@ package de.theunknownxy.mcdocs.docs.loader
 
 import de.theunknownxy.mcdocs.docs.*
 import de.theunknownxy.mcdocs.docs.loader.xml.XMLParserHandler
+import java.io.File
 import java.nio.file.Path
 import java.util.ArrayList
 import javax.xml.parsers.SAXParserFactory
@@ -19,13 +20,18 @@ public class FileDocumentationLoader(private val root_path: Path) : Documentatio
         return filepath
     }
 
+    private fun should_show_entry(p: File): Boolean {
+        return p.getName() != "index.xml" &&
+                (p.isDirectory() || p.extension.equalsIgnoreCase("xml"))
+    }
+
     private fun collect_childs(p: Path): MutableList<DocumentationNodeRef> {
         var childs: MutableList<DocumentationNodeRef> = ArrayList()
         if (p.toFile().isDirectory()) {
             val files = p.toFile().list()
             files.sort()
             for (child in files) {
-                if (child != "index.xml") {
+                if (should_show_entry(File(p.toFile(), child))) {
                     val childpath = p.resolve(child.replace(".xml", ""))
                     childs.add(DocumentationNodeRef(root_path.relativize(childpath).toString()))
                 }
