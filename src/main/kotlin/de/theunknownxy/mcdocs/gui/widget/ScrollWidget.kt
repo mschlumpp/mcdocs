@@ -82,6 +82,12 @@ public class ScrollWidget(root: Root?, val child: ScrollChild) : Widget(root) {
     }
 
     override final fun draw() {
+        // Update mouse position in child
+        val root = root
+        if (root != null) {
+            child.mouse_pos = Point(root.mouse_pos.x - x, root.mouse_pos.y - y + position)
+        }
+
         val child = child
         // Draw content
         GL11.glPushMatrix()
@@ -92,12 +98,6 @@ public class ScrollWidget(root: Root?, val child: ScrollChild) : Widget(root) {
         if (child.getHeight() > height) {
             // Draw the scrollbar if the content is larger than the view
             drawScrollbar()
-        }
-
-        // Update mouse position in child
-        val root = root
-        if (root != null) {
-            child.mouse_pos = Point(root.mouse_pos.x - x, root.mouse_pos.y - y + position)
         }
     }
 
