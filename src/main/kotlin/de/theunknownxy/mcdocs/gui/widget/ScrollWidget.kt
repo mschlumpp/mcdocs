@@ -129,6 +129,7 @@ public class ScrollWidget(root: Root?, val child: ScrollChild) : Widget(root) {
         } else {
             val mp = pos
             mp.x -= this.x
+            mp.y -= this.y
             mp.y += position
             child.onMouseClick(mp, button)
         }
