@@ -89,6 +89,17 @@ public class ScrollWidget(root: Root?, val child: ScrollChild) : Widget(root) {
         }
 
         val child = child
+
+        // Setup depth buffer to hide elements outside the widget area
+        GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT)
+
+        GL11.glDepthFunc(GL11.GL_ALWAYS)
+        GL11.glColorMask(false, false, false, false)
+        GuiUtils.drawColoredRect(x.toInt(), y.toInt(), (x + width).toInt(), (y + height).toInt(), 0x000000FF, 100.toDouble())
+        GL11.glColorMask(true, true, true, true)
+
+        GL11.glDepthFunc(GL11.GL_GREATER)
+
         // Draw content
         GL11.glPushMatrix()
         GL11.glTranslatef(x, y - position, 0f)
@@ -99,6 +110,8 @@ public class ScrollWidget(root: Root?, val child: ScrollChild) : Widget(root) {
             // Draw the scrollbar if the content is larger than the view
             drawScrollbar()
         }
+
+        GL11.glDepthFunc(GL11.GL_LEQUAL)
     }
 
     private fun drawScrollbar() {

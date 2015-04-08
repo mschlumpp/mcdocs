@@ -2,9 +2,36 @@ package de.theunknownxy.mcdocs.utils
 
 import de.theunknownxy.mcdocs.gui.base.BorderImageDescription
 import de.theunknownxy.mcdocs.gui.base.Rectangle
+import net.minecraft.client.renderer.OpenGlHelper
 import net.minecraft.client.renderer.Tessellator
+import org.lwjgl.opengl.GL11
 
 object GuiUtils {
+    public fun drawColoredRect(x1: Int, y1: Int, x2: Int, y2: Int, color: Int, z: Double = 0.toDouble()) {
+        // Extract rgba components
+        var red = (color shr 24 and 255) / 255.0f
+        var green = (color shr 16 and 255) / 255.0f
+        var blue = (color shr 8 and 255) / 255.0f
+        var alpha = (color and 255) / 255.0f
+        val tessellator = Tessellator.instance
+
+        GL11.glEnable(GL11.GL_BLEND)
+        GL11.glDisable(GL11.GL_TEXTURE_2D)
+        OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO)
+        GL11.glColor4f(red, green, blue, alpha)
+
+        // Draw rectangle
+        tessellator.startDrawingQuads()
+        tessellator.addVertex(x1.toDouble(), y2.toDouble(), z)
+        tessellator.addVertex(x2.toDouble(), y2.toDouble(), z)
+        tessellator.addVertex(x2.toDouble(), y1.toDouble(), z)
+        tessellator.addVertex(x1.toDouble(), y1.toDouble(), z)
+        tessellator.draw()
+
+        GL11.glEnable(GL11.GL_TEXTURE_2D)
+        GL11.glDisable(GL11.GL_BLEND)
+    }
+
     public fun drawTexturedModalRect(x: Int, y: Int, z: Double, u: Int, v: Int, width: Int, height: Int, texwidth: Int = width, texheight: Int = height) {
         if (width == 0 || height == 0) return
         val f = 0.00390625.toFloat()
